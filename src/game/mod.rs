@@ -1,6 +1,7 @@
 mod components;
 mod player;
 mod prelude;
+mod render;
 
 use lib_asset::level::*;
 use lib_asset::FontId;
@@ -24,6 +25,7 @@ async fn load_resources(resources: &mut Resources) {
     set_default_filter_mode(FilterMode::Nearest);
 
     resources.load_font(FontId::Quaver).await;
+    resources.load_texture(TextureId::Mobs).await;
     build_textures_atlas();
 }
 
@@ -120,7 +122,9 @@ impl Game for Project {
         world: &World,
         render: &mut Render,
     ) {
-        if app_state.is_presentable() { /* UI stuff */ }
+        if app_state.is_presentable() { 
+            render::render_player(world, render);
+        }
     }
 
     fn init_tile(
