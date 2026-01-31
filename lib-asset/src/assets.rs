@@ -191,6 +191,8 @@ pub enum GameCfgId {
 pub struct PlayerAttributes {
     #[serde(default)]
     pub invisible_to_grunts: bool,
+    #[serde(default)]
+    pub strong_against_grunts: bool,
 }
 
 impl Asset for Vec<PlayerAttributes> {

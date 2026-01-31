@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="17" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#030307" nextlayerid="4" nextobjectid="19">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="17" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#030307" nextlayerid="4" nextobjectid="20">
  <tileset firstgid="1" source="world.tsx"/>
  <layer id="1" name="World" width="16" height="17">
   <data encoding="csv">
@@ -23,10 +23,15 @@
 </data>
  </layer>
  <objectgroup id="3" name="Characters">
-  <object id="14" template="character.tx" name="Player" type="player" x="172.812" y="129.207" rotation="180"/>
+  <object id="14" template="character.tx" name="Player" type="player" x="41.3115" y="153.207" rotation="180"/>
   <object id="15" template="character.tx" name="Watcher" type="stabber" x="175.636" y="56.9545"/>
   <object id="16" template="character.tx" name="Watcher" type="stabber" x="177.182" y="213.636"/>
   <object id="17" template="character.tx" type="hunter" x="75.6667" y="168.667"/>
   <object id="18" template="character.tx" type="hunter" x="77.6667" y="88.6667"/>
+  <object id="19" template="character.tx" type="mask" x="41.75" y="123.75">
+   <properties>
+    <property name="id" type="int" value="2"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
