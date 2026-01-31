@@ -107,11 +107,12 @@ impl Game for Project {
     fn update(
         &mut self,
         dt: f32,
-        resources: &lib_game::Resources,
+        resources: &mut lib_game::Resources,
         world: &mut World,
         _collisions: &CollisionSolver,
         cmds: &mut CommandBuffer,
     ) -> Option<lib_game::AppState> {
+        player::publish_pos(world, resources);
         decide_next_state(world)
     }
 

@@ -11,7 +11,7 @@ pub mod dbg;
 pub mod sys;
 
 use hashbrown::HashMap;
-use hecs::EntityBuilder;
+use hecs::{Entity, EntityBuilder};
 
 pub use collisions::*;
 pub use components::*;
@@ -116,7 +116,7 @@ pub trait Game: 'static {
     fn update(
         &mut self,
         dt: f32,
-        resources: &Resources,
+        resources: &mut Resources,
         world: &mut World,
         collisions: &CollisionSolver,
         cmds: &mut CommandBuffer,
@@ -176,6 +176,7 @@ pub struct App {
     pub render: Render,
     col_solver: CollisionSolver,
     pub world: World,
+    room_switches: [Entity; 4],
     cmds: CommandBuffer,
 
     render_world: bool,
@@ -202,6 +203,7 @@ impl App {
             render: Render::new(),
             col_solver: CollisionSolver::new(),
             world: World::new(),
+            room_switches: [Entity::DANGLING; 4],
             cmds: CommandBuffer::new(),
 
             render_world: true,
@@ -272,9 +274,66 @@ impl App {
         );
 
         self.world.clear();
+
+        let tile_side = TILE_SIDE as f32;
+        let level_width = (level.map.width * TILE_SIDE) as f32;
+        let level_height = (level.map.height * TILE_SIDE) as f32;
+        let mut spawn_interraction = |pos, width, height| self.world.spawn((
+            Transform::from_pos(pos),
+            col_query::Interaction::new(
+                Shape::Rect { width, height }, 
+                col_group::PLAYER, 
+                col_group::NONE,
+            ),
+        )); 
+        
+        let left = spawn_interraction(
+            vec2(0.0, level_height / 2.0),
+            tile_side,
+            level_height,
+        );
+        let top = spawn_interraction(
+            vec2(level_width / 2.0, 0.0),
+            level_width,
+            tile_side,
+        );
+        let right = spawn_interraction(
+            vec2(level_width, level_height / 2.0),
+            tile_side,
+            level_height,
+        );
+        let bot = spawn_interraction(
+            vec2(level_width / 2.0, level_height),
+            level_width,
+            tile_side,
+        );
+        self.room_switches = [left, top, right, bot];
+
+        // left
+        if level_id.0.x < self.resources.level_id.0.x {
+            self.resources.player_pos.x = level_width - 2.0 * tile_side; 
+        }
+
+        // top
+        if level_id.0.y < self.resources.level_id.0.y {
+            self.resources.player_pos.x = level_height - 2.0 * tile_side; 
+        }
+
+        // right
+        if level_id.0.x > self.resources.level_id.0.x {
+            self.resources.player_pos.x = 2.0 * tile_side; 
+        }
+
+        // bot
+        if level_id.0.y > self.resources.level_id.0.y {
+            self.resources.player_pos.y = 2.0 * tile_side; 
+        }
+
         self.resources.level = level;
+        self.resources.level_id = level_id;
         self.spawn_tiles(game);
         self.spawn_characters(game);
+        self.resources.is_start = false;
     }
 
     fn spawn_tiles<G: Game>(&mut self, game: &G) {
@@ -329,10 +388,11 @@ impl App {
         health::apply_damage(&mut self.world);
         health::apply_cooldown(&mut self.world);
         health::despawn_on_zero_health(&mut self.world, &mut self.cmds);
+        self.do_room_switch();
 
         let new_state = game.update(
             GAME_TICKRATE,
-            &self.resources,
+            &mut self.resources,
             &mut self.world,
             &self.col_solver,
             &mut self.cmds,
@@ -342,6 +402,43 @@ impl App {
         self.world.flush();
 
         new_state
+    }
+
+    fn do_room_switch(&mut self) {
+        let check_level_switch = |switch| {
+            let Ok(q) = self.world.get::<&col_query::Interaction>(switch) else {
+                return false;
+            };
+            return !self.col_solver.collisions_for(&q).is_empty();
+        };
+
+        // left
+        if check_level_switch(self.room_switches[0]) {
+            let mut level_id = self.resources.level_id;
+            level_id.0.x -= 1;
+            self.queued_level = Some(level_id);
+        }
+
+        // top
+        if check_level_switch(self.room_switches[1]) {
+            let mut level_id = self.resources.level_id;
+            level_id.0.y -= 1;
+            self.queued_level = Some(level_id);
+        }
+        
+        // right
+        if check_level_switch(self.room_switches[2]) {
+            let mut level_id = self.resources.level_id;
+            level_id.0.x += 1;
+            self.queued_level = Some(level_id);
+        }
+
+        // bot
+        if check_level_switch(self.room_switches[3]) {
+            let mut level_id = self.resources.level_id;
+            level_id.0.y += 1;
+            self.queued_level = Some(level_id);
+        }
     }
 
     fn fullscreen_toggles(&mut self, input: &InputModel) {
@@ -420,7 +517,10 @@ impl App {
 pub struct Resources {
     pub cfg: GameCfg,
     pub resolver: FsResolver,
+    pub is_start: bool,
+    pub level_id: LevelId,
     pub level: LevelDef,
+    pub player_pos: Vec2,
     pub textures: HashMap<TextureId, Texture2D>,
     pub fonts: HashMap<FontId, Font>,
 }
@@ -429,7 +529,10 @@ impl Resources {
     pub fn new() -> Self {
         Resources {
             cfg: GameCfg::default(),
+            is_start: true,
             resolver: FsResolver::new(),
+            level_id: LevelId(uvec2(0, 0)),
+            player_pos: vec2(0.0, 0.0),
             level: LevelDef::default(),
             textures: HashMap::new(),
             fonts: HashMap::new(),

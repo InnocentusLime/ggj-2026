@@ -1,6 +1,11 @@
 use super::prelude::*;
 
 pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
+    let pos = if resources.is_start {
+        pos
+    } else {
+        resources.player_pos
+    };
     let cfg = &resources.cfg;
     builder.add_bundle((
         PlayerState::Idle,
@@ -37,11 +42,17 @@ pub fn controls(dt: f32, input: &InputModel, world: &mut World, resources: &Reso
     }
     walk_dir = walk_dir.normalize_or_zero();
 
-    for (_, control) in world.query_mut::<&mut KinematicControl>() {
+    for (_, control) in world.query_mut::<&mut KinematicControl>().with::<&PlayerState>() {
         if do_walk {
             control.dr = walk_dir * dt * cfg.player.speed;
         } else {
             control.dr = Vec2::ZERO;
         }
+    }
+}
+
+pub fn publish_pos(world: &mut World, resources: &mut Resources) {
+    for (_, tf) in world.query_mut::<&Transform>().with::<&PlayerState>() {
+        resources.player_pos = tf.pos;
     }
 }

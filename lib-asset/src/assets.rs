@@ -50,7 +50,7 @@ impl Asset for Texture2D {
     fn inverse_resolve(filename: &Path) -> anyhow::Result<Self::AssetId> {
         TextureId::VARIANTS.iter()
             .copied()
-            .find(|x| &Self::filename(*x) == filename)
+            .find(|x| &Self::filename(*x) == filename.to_str().unwrap())
             .ok_or_else(|| anyhow!("{filename:?} does not correspond to a texture"))
     }
 }
