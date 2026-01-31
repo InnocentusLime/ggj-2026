@@ -7,3 +7,6 @@ pub enum PlayerState {
 pub enum StabberState {
     Active = 0,
 }
+
+#[derive(Debug, Clone, Copy)]
+pub struct CurrentMask(pub u32);

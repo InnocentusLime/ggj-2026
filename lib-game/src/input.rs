@@ -15,6 +15,7 @@ pub struct InputModel {
     pub scroll_up: bool,
     pub scroll_down: bool,
     pub aim: Vec2,
+    pub mask_request: Option<u32>,
 }
 
 impl InputModel {
@@ -38,6 +39,22 @@ impl InputModel {
         let scroll_down = is_key_down(KeyCode::PageDown);
         let dash_pressed = is_mouse_button_pressed(MouseButton::Right);
 
+        let mask_keys = [
+            KeyCode::Key1,
+            KeyCode::Key2,
+            KeyCode::Key3,
+            KeyCode::Key4,
+            KeyCode::Key5,
+            KeyCode::Key6,
+            KeyCode::Key7,
+            KeyCode::Key8,
+            KeyCode::Key9,
+        ];
+        let mask_request = mask_keys.into_iter()
+            .enumerate()
+            .find(|(_, key)| is_key_pressed(*key))
+            .map(|(id, _)| id as u32);
+
         Self {
             console_toggle_requested,
             attack_down,
@@ -52,6 +69,7 @@ impl InputModel {
             scroll_up,
             scroll_down,
             aim,
+            mask_request,
         }
     }
 }

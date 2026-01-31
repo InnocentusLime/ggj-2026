@@ -18,6 +18,10 @@ pub async fn load_game_config(resolver: &FsResolver) -> anyhow::Result<GameCfg> 
     resolver.load::<GameCfg>(GameCfgId::Cfg).await
 }
 
+pub async fn load_masks(resolver: &FsResolver) -> anyhow::Result<Vec<PlayerAttributes>> {
+    resolver.load::<Vec<PlayerAttributes>>(()).await
+}
+
 pub struct FsResolver {
     roots: HashMap<AssetRoot, PathBuf>,
 }

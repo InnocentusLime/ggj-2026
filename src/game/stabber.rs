@@ -16,17 +16,21 @@ pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
             cfg.stabber.stab_box, 
             col_group::PLAYER, 
             col_group::NONE,
-        )
+        ),
     ));
 }
 
 pub fn think(dt: f32, world: &World, resources: &Resources) {
     let cfg = &resources.cfg;
     for (_, (tf, kin)) in &mut world.query::<(&Transform, &mut KinematicControl)>().with::<&StabberState>().iter() {
-        let Some(player) = find_player(world) else {
+        let Some((player, attrs)) = find_player(world) else {
             kin.dr = Vec2::ZERO;
             continue;
         };
+        if attrs.invisible_to_grunts {
+            kin.dr = Vec2::ZERO;
+            continue;
+        }
         let player_dir = (player - tf.pos).normalize_or_zero();
         kin.dr = player_dir * cfg.stabber.speed * dt;
     }

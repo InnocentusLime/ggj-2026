@@ -93,7 +93,7 @@ pub trait Game: 'static {
         &mut self,
         input: &InputModel,
         dt: f32,
-        resources: &Resources,
+        resources: &mut Resources,
         world: &mut World,
     );
 
@@ -190,7 +190,7 @@ impl App {
     pub async fn new(conf: &Conf) -> anyhow::Result<Self> {
         let mut resources = Resources::new();
         resources.cfg = load_game_config(&resources.resolver).await?;
-        // TODO: log cfg
+        resources.masks = load_masks(&resources.resolver).await?; 
 
         Ok(Self {
             fullscreen: conf.fullscreen,
@@ -371,7 +371,7 @@ impl App {
     }
 
     fn game_update<G: Game>(&mut self, input: &InputModel, game: &mut G) -> Option<AppState> {
-        game.input_phase(input, GAME_TICKRATE, &self.resources, &mut self.world);
+        game.input_phase(input, GAME_TICKRATE, &mut self.resources, &mut self.world);
 
         health::reset(&mut self.world);
         health::update_cooldown(GAME_TICKRATE, &mut self.world);
@@ -514,6 +514,9 @@ impl App {
         if new_cam.zoom == self.camera.zoom && new_cam.target == self.camera.target && self.camera.render_target.is_some() {
             return;
         }
+        if self.camera.render_target.is_some() {
+            return;
+        }
 
         let target = render_target(
             view_width as u32 * 2,
@@ -546,6 +549,8 @@ pub struct Resources {
     pub player_pos: Vec2,
     pub textures: HashMap<TextureId, Texture2D>,
     pub fonts: HashMap<FontId, Font>,
+    pub masks: Vec<PlayerAttributes>,
+    pub current_mask: u32,
 }
 
 impl Resources {
@@ -559,6 +564,8 @@ impl Resources {
             level: LevelDef::default(),
             textures: HashMap::new(),
             fonts: HashMap::new(),
+            masks: Vec::new(),
+            current_mask: 0,
         }
     }
 

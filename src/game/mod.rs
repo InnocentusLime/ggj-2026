@@ -77,16 +77,18 @@ impl Game for Project {
         &mut self,
         input: &lib_game::InputModel,
         dt: f32,
-        resources: &lib_game::Resources,
+        resources: &mut lib_game::Resources,
         world: &mut World,
     ) {
+        if self.do_player_controls {
+            player::controls(dt, input, world, resources);
+            player::propagate_attriutes(world, resources);
+        }
+        
         if self.do_ai {
             stabber::think(dt, world, resources);
         }
 
-        if self.do_player_controls {
-            player::controls(dt, input, world, resources);
-        }
     }
 
     fn plan_collision_queries(

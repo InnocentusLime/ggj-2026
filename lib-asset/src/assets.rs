@@ -186,3 +186,34 @@ impl Asset for GameCfg {
 pub enum GameCfgId {
     Cfg,
 }
+
+#[derive(Default, Debug, Clone, Copy, serde::Deserialize)]
+pub struct PlayerAttributes {
+    #[serde(default)]
+    pub invisible_to_grunts: bool,
+}
+
+impl Asset for Vec<PlayerAttributes> {
+    type AssetId = ();
+    const ROOT: AssetRoot = AssetRoot::Base;
+
+    async fn load(
+        resolver: &FsResolver,
+        path: &Path,
+    ) -> anyhow::Result<Self> {
+        use anyhow::Context;
+        use macroquad::prelude::*;
+        let json = load_string(path.to_str().unwrap())
+            .await
+            .context("loading JSON")?;
+        serde_json::from_str(&json).context("decoding")
+    }
+
+    fn filename(id: Self::AssetId) -> String {
+        "masks.json".to_string()
+    }
+
+    fn inverse_resolve(filename: &Path) -> anyhow::Result<Self::AssetId> {
+        unimplemented!()
+    }
+}

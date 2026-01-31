@@ -19,6 +19,7 @@ EOF
 # Put all files
 COPY /assets/ /dist/assets
 COPY /gamecfg.json /dist/
+COPY /masks.json /dist/
 COPY /static/* /dist
 RUN cp /project/target/wasm32-unknown-unknown/wasm-release/quad-jam-2024.wasm /dist/game.wasm
 RUN mkdir /dist/levels && \

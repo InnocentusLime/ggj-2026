@@ -17,6 +17,8 @@ pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
             groups: col_group::CHARACTERS.union(col_group::PLAYER),
             shape: cfg.player.shape,
         },
+        PlayerAttributes::default(),
+        CurrentMask(resources.current_mask),
     ));
 }
 
@@ -48,6 +50,31 @@ pub fn controls(dt: f32, input: &InputModel, world: &mut World, resources: &Reso
         } else {
             control.dr = Vec2::ZERO;
         }
+
+        if let Some(mask) = input.mask_request {
+            info!("Mask queued: {mask}");
+        }
+    }
+
+    for (_, (mask)) in world.query_mut::<(&mut CurrentMask)>().with::<&PlayerState>() {
+        let Some(new_mask) = input.mask_request else {
+            continue;
+        };
+        let Some(_) = resources.masks.get(new_mask as usize) else {
+            continue;
+        };
+        info!("new_mas: {new_mask}");
+        mask.0 = new_mask;
+    }
+}
+
+pub fn propagate_attriutes(world: &mut World, resources: &mut Resources) {
+    for (_, (mask, attrs)) in world.query_mut::<(&CurrentMask, &mut PlayerAttributes)>().with::<&PlayerState>() {
+        let Some(new_attrs) = resources.masks.get(mask.0 as usize) else {
+            continue;
+        };
+        *attrs = *new_attrs;
+        resources.current_mask = mask.0;
     }
 }
 
