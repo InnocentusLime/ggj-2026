@@ -8,7 +8,6 @@ pub fn render_player(world: &World, render: &mut Render) {
         let Shape::Rect { width, height } = body.shape else {
             continue;
         };
-        let rect = Rect { x: 0.0, y: 0.0, w: 16.0, h: 16.0 };
         let mut tf = *tf;
         let mut player_color = WHITE;
         if should_flicker() && health.is_invulnerable {
@@ -20,7 +19,7 @@ pub fn render_player(world: &World, render: &mut Render) {
             layer: 1, 
             tf, 
             texture: TextureId::Mobs, 
-            rect, 
+            rect: atlas_tile(0, 0), 
             color: player_color, 
             sort_offset: 0.0, 
         });
@@ -32,8 +31,6 @@ pub fn render_stabber(world: &World, render: &mut Render) {
         let Shape::Rect { width, height } = body.shape else {
             continue;
         };
-        let Vec2 {x, y} = vec2(3.0, 4.0) * 16.0;
-        let rect = Rect { x, y, w: 16.0, h: 16.0 };
         let mut tf = *tf;
 
         tf.pos -= vec2(width, height) / 2.0;
@@ -41,7 +38,7 @@ pub fn render_stabber(world: &World, render: &mut Render) {
             layer: 1, 
             tf, 
             texture: TextureId::Mobs, 
-            rect, 
+            rect: atlas_tile(3, 4), 
             color: WHITE, 
             sort_offset: 0.0, 
         });

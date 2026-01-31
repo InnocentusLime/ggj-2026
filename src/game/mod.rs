@@ -27,6 +27,9 @@ async fn load_resources(resources: &mut Resources) {
 
     resources.load_font(FontId::Quaver).await;
     resources.load_texture(TextureId::Mobs).await;
+    resources.load_texture(TextureId::World).await;
+    resources.load_texture(TextureId::Items).await;
+    resources.load_texture(TextureId::Objs).await;
     build_textures_atlas();
 }
 
@@ -165,6 +168,27 @@ impl Game for Project {
         match def.info {
             CharacterInfo::Player {} => player::init(builder, def.pos, resources),
             CharacterInfo::Stabber {} => stabber::init(builder, def.pos, resources),
+        }
+    }
+
+    fn draw_ui(&self, world: &World, resources: &Resources, cam: &dyn Camera) {
+        let player_hp = player_health(world);
+        let heart_params = DrawTextureParams {
+            dest_size: None,
+            source: Some(atlas_tile(14, 0)),
+            rotation: 0.0,
+            flip_x: false,
+            flip_y: false,
+            pivot: None,
+        };
+        for hp_idx in 0..player_hp {
+            draw_texture_ex(
+                &resources.textures[&TextureId::Items], 
+                -2.0 * TILE_SIDE_F32, 
+                3.0 * TILE_SIDE_F32 + TILE_SIDE_F32 * hp_idx as f32, 
+                WHITE, 
+                heart_params.clone(),
+            );
         }
     }
 }

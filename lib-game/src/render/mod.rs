@@ -157,23 +157,28 @@ impl Render {
         resources: &Resources,
         camera: &dyn Camera,
         render_world: bool,
-        _dt: f32,
+        draw_ui: impl FnOnce(&dyn Camera),
     ) {
         clear_background(Color {
             r: 0.0,
             g: 0.0,
-            b: 0.02,
+            b: 0.0,
             a: 1.0,
         });
+        set_camera(camera);
 
         if render_world {
-            set_camera(camera);
+            draw_rectangle(
+                0.0, 0.0, 
+                TILE_SIDE as f32 * 16.0,
+                TILE_SIDE as f32 * 17.0,
+                DARKBLUE,
+            );
             self.draw_sprites(resources);
             self.draw_texts(resources);
         }
 
-        self.setup_ui_camera(resources);
-        self.draw_announcement_text(resources);
+        draw_ui(camera);
     }
 
     pub fn debug_render<F>(&mut self, camera: &dyn Camera, code: F)
@@ -215,16 +220,6 @@ impl Render {
         }
     }
 
-    fn setup_ui_camera(&mut self, resources: &Resources) {
-        match resources.fonts.get(&self.ui_font) {
-            None => {
-                warn!("No such font: {:?}", self.ui_font);
-                set_default_camera();
-            }
-            Some(font) => set_camera(&Self::get_ui_cam(font)),
-        }
-    }
-
     pub fn buffer_tiles(&mut self, world: &mut World) {
         for (_, (tf, tile)) in world.query_mut::<(&Transform, &TileIdx)>() {
             let tile_rect = self.tilemap_tiles[*tile as usize];
@@ -239,74 +234,6 @@ impl Render {
                 color: WHITE,
                 sort_offset: 0.0,
             });
-        }
-    }
-
-    fn draw_announcement_text(&mut self, resources: &Resources) {
-        if let Some(announce) = self.announcement_text.as_ref() {
-            let Some(font) = resources.fonts.get(&self.ui_font) else {
-                warn!("No such font: {:?}", self.ui_font);
-                return;
-            };
-
-            let view_rect = Self::ui_view_rect(font);
-
-            draw_rectangle(
-                view_rect.x,
-                view_rect.y,
-                view_rect.w,
-                view_rect.h,
-                Color {
-                    r: 0.0,
-                    g: 0.0,
-                    b: 0.12,
-                    a: 0.5,
-                },
-            );
-
-            let center = get_text_center(
-                announce.heading,
-                Some(font),
-                MAIN_FONT_SIZE,
-                FONT_SCALE,
-                0.0,
-            );
-            draw_text_ex(
-                announce.heading,
-                view_rect.left() + view_rect.w / 2.0 - center.x,
-                view_rect.top() + view_rect.h / 2.0 - center.y,
-                TextParams {
-                    font: Some(font),
-                    font_size: MAIN_FONT_SIZE,
-                    color: Color::from_hex(0xDDFBFF),
-                    font_scale: FONT_SCALE,
-                    ..Default::default()
-                },
-            );
-
-            let Some(hint) = announce.body else {
-                return;
-            };
-            let center = get_text_center(
-                Self::find_longest_line(hint),
-                Some(font),
-                HINT_FONT_SIZE,
-                FONT_SCALE,
-                0.0,
-            );
-            draw_multiline_text_ex(
-                hint,
-                view_rect.left() + view_rect.w / 2.0 - center.x,
-                view_rect.top() + view_rect.h / 2.0 - center.y + (MAIN_FONT_SIZE as f32) * 1.5,
-                None,
-                TextParams {
-                    font: Some(font),
-                    font_size: HINT_FONT_SIZE,
-                    color: Color::from_hex(0xDDFBFF),
-                    font_scale: FONT_SCALE,
-                    ..Default::default()
-                },
-            );
         }
     }
 

@@ -131,6 +131,8 @@ pub trait Game: 'static {
         render: &mut Render,
     );
 
+    fn draw_ui(&self, world: &World, resources: &Resources, cam: &dyn Camera);
+
     fn init_tile(
         &self,
         resources: &Resources,
@@ -265,7 +267,6 @@ impl App {
             .load::<LevelDef>(level_id)
             .await
             .unwrap();
-        self.resources.load_texture(level.map.atlas).await;
         self.render.set_atlas(
             &self.resources,
             level.map.atlas,
@@ -361,8 +362,12 @@ impl App {
         self.render.new_frame();
         self.render.buffer_tiles(&mut self.world);
         game.render_export(&self.state, &self.resources, &self.world, &mut self.render);
-        self.render
-            .render(&self.resources, &self.camera, self.render_world, real_dt);
+        self.render.render(
+            &self.resources, 
+            &self.camera, 
+            self.render_world, 
+            |cam| game.draw_ui(&self.world, &self.resources, cam),
+        );
     }
 
     fn game_update<G: Game>(&mut self, input: &InputModel, game: &mut G) -> Option<AppState> {
