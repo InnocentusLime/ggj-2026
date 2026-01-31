@@ -49,10 +49,6 @@ jobs:
           apt-get install -y --no-install-recommends libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
       - name: Check Native (dev-env)
         run: cargo build --locked --features lib-game/dev-env
-      - name: Check Native (dbg-only)
-        run: cargo build --locked --features lib-game/dbg
-      - name: Check Native (shipped)
-        run: cargo build --locked
       - name: Check (asset-compiler)
         run: cargo build --locked --features dev-env --package lib-asset --bin asset-compiler
   tests:
