@@ -501,14 +501,32 @@ impl App {
     }
 
     fn update_camera(&mut self) {
+        dump!("render: {}", self.camera.render_target.is_some());
+
         let view_height = 17.0 * TILE_SIDE as f32;
         let view_width = ((screen_width() / screen_height()) * view_height).floor();
-        self.camera = Camera2D::from_display_rect(Rect {
+        let new_cam = Camera2D::from_display_rect(Rect {
             x: 0.0,
             y: 0.0,
             w: view_width,
             h: view_height,
         });
+        if new_cam.zoom == self.camera.zoom && new_cam.target == self.camera.target && self.camera.render_target.is_some() {
+            return;
+        }
+
+        let target = render_target(
+            view_width as u32 * 2,
+            view_height as u32 * 2,
+        );
+        target.texture.set_filter(FilterMode::Nearest);
+        self.resources.textures.insert(
+            TextureId::Screen, 
+            target.texture.clone(),
+        );
+        
+        self.camera = new_cam;
+        self.camera.render_target = Some(target);
         self.camera.zoom.y *= -1.0;
 
         // FIXME: magic numbers!

@@ -135,7 +135,7 @@ impl Render {
             for x in 0..atlas_tiles_x {
                 let tex_x = (TILE_SIDE + atlas_spacing) * x + atlas_margin;
                 let tex_y = (TILE_SIDE + atlas_spacing) * y + atlas_margin;
-                info!("{}: {tex_x},{tex_y}", self.tilemap_tiles.len());
+                // info!("{}: {tex_x},{tex_y}", self.tilemap_tiles.len());
                 self.tilemap_tiles.push(Rect {
                     x: tex_x as f32,
                     y: tex_y as f32,
@@ -159,13 +159,13 @@ impl Render {
         render_world: bool,
         draw_ui: impl FnOnce(&dyn Camera),
     ) {
+        set_camera(camera);
         clear_background(Color {
             r: 0.0,
             g: 0.0,
             b: 0.0,
             a: 1.0,
         });
-        set_camera(camera);
 
         if render_world {
             draw_rectangle(
@@ -179,6 +179,27 @@ impl Render {
         }
 
         draw_ui(camera);
+        
+        set_default_camera();
+        clear_background(BLACK);
+        let Some(screen) = resources.textures.get(&TextureId::Screen) else {
+            return;
+        };
+        let screen_params = DrawTextureParams { 
+            dest_size: Some(vec2(screen_width(), screen_height())), 
+            source: None, 
+            rotation: 0.0, 
+            flip_x: false, 
+            flip_y: false, 
+            pivot: None, 
+        };
+        draw_texture_ex(
+            screen, 
+            0.0, 
+            0.0, 
+            WHITE, 
+            screen_params,
+        );
     }
 
     pub fn debug_render<F>(&mut self, camera: &dyn Camera, code: F)

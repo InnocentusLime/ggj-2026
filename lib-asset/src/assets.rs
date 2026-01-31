@@ -27,6 +27,7 @@ pub enum TextureId {
     Mobs,
     #[default]
     World,
+    Screen,
 }
 
 impl Asset for Texture2D {
@@ -44,6 +45,7 @@ impl Asset for Texture2D {
             TextureId::Items => "items.png",
             TextureId::Mobs => "mobs.png",
             TextureId::World => "world.png",
+            TextureId::Screen => panic!("file-less texture"),
         }.to_string()
     }
     
