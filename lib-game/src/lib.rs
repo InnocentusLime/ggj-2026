@@ -191,6 +191,10 @@ impl App {
         let mut resources = Resources::new();
         resources.cfg = load_game_config(&resources.resolver).await?;
         resources.masks = load_masks(&resources.resolver).await?; 
+        resources.mask_unlock = vec![
+            false; resources.masks.len()
+        ];
+        resources.mask_unlock[0] = true;
 
         Ok(Self {
             fullscreen: conf.fullscreen,
@@ -550,6 +554,7 @@ pub struct Resources {
     pub textures: HashMap<TextureId, Texture2D>,
     pub fonts: HashMap<FontId, Font>,
     pub masks: Vec<PlayerAttributes>,
+    pub mask_unlock: Vec<bool>,
     pub current_mask: u32,
 }
 
@@ -565,6 +570,7 @@ impl Resources {
             textures: HashMap::new(),
             fonts: HashMap::new(),
             masks: Vec::new(),
+            mask_unlock: Vec::new(),
             current_mask: 0,
         }
     }

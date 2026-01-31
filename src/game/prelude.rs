@@ -30,3 +30,10 @@ pub fn atlas_tile(x: u32, y: u32) -> Rect {
         h: TILE_SIDE_F32,
     }
 }
+
+pub fn player_mask(world: &World) -> u32 {
+    for (_, mask) in world.query::<&CurrentMask>().with::<&PlayerState>().into_iter() {
+        return mask.0
+    }
+    0
+}

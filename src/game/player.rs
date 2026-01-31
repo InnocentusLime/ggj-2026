@@ -63,6 +63,9 @@ pub fn controls(dt: f32, input: &InputModel, world: &mut World, resources: &Reso
         let Some(_) = resources.masks.get(new_mask as usize) else {
             continue;
         };
+        if !resources.mask_unlock[new_mask as usize] {
+            continue;
+        }
         info!("new_mas: {new_mask}");
         mask.0 = new_mask;
     }

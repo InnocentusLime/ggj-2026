@@ -192,6 +192,44 @@ impl Game for Project {
                 heart_params.clone(),
             );
         }
+
+        let player_mask = player_mask(world);
+        let font = &resources.fonts[&FontId::Quaver];
+        draw_text_ex(
+            "MASK", 
+            16.0 * TILE_SIDE_F32 + 1.0 * TILE_SIDE_F32, 
+            3.0 * TILE_SIDE_F32, 
+            TextParams { 
+                font: Some(font), 
+                font_size: 16, 
+                font_scale: 1.0, 
+                font_scale_aspect: 1.0,
+                rotation: 0.0, 
+                color: WHITE, 
+            },
+        );
+        for mask_id in 0..resources.masks.len() {
+            let color = if player_mask == mask_id as u32 {
+                YELLOW
+            } else if resources.mask_unlock[mask_id] {
+                WHITE
+            } else {
+                DARKGRAY
+            };
+            draw_text_ex(
+                format!("{}", mask_id + 1), 
+                16.0 * TILE_SIDE_F32 + 1.0 * TILE_SIDE_F32, 
+                4.0 * TILE_SIDE_F32 + TILE_SIDE_F32 * mask_id as f32, 
+                TextParams { 
+                    font: Some(font), 
+                    font_size: 16, 
+                    font_scale: 1.0, 
+                    font_scale_aspect: 1.0,
+                    rotation: 0.0, 
+                    color, 
+                },
+            );
+        }
     }
 }
 
