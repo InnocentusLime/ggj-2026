@@ -44,6 +44,7 @@ pub struct CharacterDef {
 #[serde(rename_all = "snake_case")]
 pub enum CharacterInfo {
     Player {},
+    Stabber {},
 }
 
 impl Default for CharacterInfo {

@@ -586,17 +586,61 @@
  <tile id="139" type="tile"/>
  <tile id="140" type="tile"/>
  <tile id="141" type="tile"/>
- <tile id="144" type="tile"/>
- <tile id="145" type="tile"/>
- <tile id="146" type="tile"/>
- <tile id="147" type="tile"/>
- <tile id="148" type="tile"/>
- <tile id="149" type="tile"/>
- <tile id="150" type="tile"/>
- <tile id="151" type="tile"/>
- <tile id="152" type="tile"/>
- <tile id="153" type="tile"/>
- <tile id="154" type="tile"/>
+ <tile id="144" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="145" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="146" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="147" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="148" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="149" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="150" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="151" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="152" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="153" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="154" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
  <tile id="155" type="tile"/>
  <tile id="156" type="tile"/>
  <tile id="157" type="tile"/>
@@ -608,17 +652,61 @@
  <tile id="163" type="tile"/>
  <tile id="164" type="tile"/>
  <tile id="165" type="tile"/>
- <tile id="168" type="tile"/>
- <tile id="169" type="tile"/>
- <tile id="170" type="tile"/>
- <tile id="171" type="tile"/>
- <tile id="172" type="tile"/>
- <tile id="173" type="tile"/>
- <tile id="174" type="tile"/>
- <tile id="175" type="tile"/>
- <tile id="176" type="tile"/>
- <tile id="177" type="tile"/>
- <tile id="178" type="tile"/>
+ <tile id="168" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="169" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="170" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="171" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="172" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="173" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="174" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="175" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="176" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="177" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="178" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
  <tile id="179" type="tile"/>
  <tile id="180" type="tile"/>
  <tile id="181" type="tile"/>
@@ -630,17 +718,61 @@
  <tile id="187" type="tile"/>
  <tile id="188" type="tile"/>
  <tile id="189" type="tile"/>
- <tile id="192" type="tile"/>
- <tile id="193" type="tile"/>
- <tile id="194" type="tile"/>
- <tile id="195" type="tile"/>
- <tile id="196" type="tile"/>
- <tile id="197" type="tile"/>
- <tile id="198" type="tile"/>
- <tile id="199" type="tile"/>
- <tile id="200" type="tile"/>
- <tile id="201" type="tile"/>
- <tile id="202" type="tile"/>
+ <tile id="192" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="193" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="194" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="195" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="196" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="197" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="198" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="199" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="200" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="201" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="202" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
  <tile id="203" type="tile"/>
  <tile id="204" type="tile"/>
  <tile id="205" type="tile"/>
@@ -652,17 +784,61 @@
  <tile id="211" type="tile"/>
  <tile id="212" type="tile"/>
  <tile id="213" type="tile"/>
- <tile id="216" type="tile"/>
- <tile id="217" type="tile"/>
- <tile id="218" type="tile"/>
- <tile id="219" type="tile"/>
- <tile id="220" type="tile"/>
- <tile id="221" type="tile"/>
- <tile id="222" type="tile"/>
- <tile id="223" type="tile"/>
- <tile id="224" type="tile"/>
- <tile id="225" type="tile"/>
- <tile id="226" type="tile"/>
+ <tile id="216" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="217" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="218" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="219" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="220" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="221" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="222" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="223" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="224" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="225" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="226" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
  <tile id="227" type="tile"/>
  <tile id="228" type="tile"/>
  <tile id="229" type="tile"/>
@@ -674,17 +850,61 @@
  <tile id="235" type="tile"/>
  <tile id="236" type="tile"/>
  <tile id="237" type="tile"/>
- <tile id="240" type="tile"/>
- <tile id="241" type="tile"/>
- <tile id="242" type="tile"/>
- <tile id="243" type="tile"/>
- <tile id="244" type="tile"/>
- <tile id="245" type="tile"/>
- <tile id="246" type="tile"/>
- <tile id="247" type="tile"/>
- <tile id="248" type="tile"/>
- <tile id="249" type="tile"/>
- <tile id="250" type="tile"/>
+ <tile id="240" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="241" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="242" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="243" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="244" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="245" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="246" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="247" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="248" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="249" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
+ <tile id="250" type="tile">
+  <properties>
+   <property name="ty" propertytype="tile_ty" value="Wall"/>
+  </properties>
+ </tile>
  <tile id="251" type="tile"/>
  <tile id="252" type="tile"/>
  <tile id="253" type="tile"/>

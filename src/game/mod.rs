@@ -2,6 +2,7 @@ mod components;
 mod player;
 mod prelude;
 mod render;
+mod stabber;
 
 use lib_asset::level::*;
 use lib_asset::FontId;
@@ -77,12 +78,7 @@ impl Game for Project {
         world: &mut World,
     ) {
         if self.do_ai {
-            for transition in &self.transitions {
-                transition(world, resources)
-            }
-            for ai in &self.ais {
-                ai(dt, world, resources)
-            }
+            stabber::think(dt, world, resources);
         }
 
         if self.do_player_controls {
@@ -125,6 +121,7 @@ impl Game for Project {
     ) {
         if app_state.is_presentable() { 
             render::render_player(world, render);
+            render::render_stabber(world, render);
         }
     }
 
@@ -167,6 +164,7 @@ impl Game for Project {
     ) {
         match def.info {
             CharacterInfo::Player {} => player::init(builder, def.pos, resources),
+            CharacterInfo::Stabber {} => stabber::init(builder, def.pos, resources),
         }
     }
 }

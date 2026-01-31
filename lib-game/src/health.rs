@@ -37,16 +37,13 @@ pub fn apply_damage(world: &mut World) {
 }
 
 pub fn collect_damage(world: &mut World, col_solver: &CollisionSolver) {
-    let mut hp_query = world.query::<(&mut Health, &Team)>();
+    let mut hp_query = world.query::<(&mut Health)>();
     let mut hp_query = hp_query.view();
-    for (_, (damage_q, attack_team)) in &mut world.query::<(&col_query::Damage, &Team)>() {
+    for (_, (damage_q)) in &mut world.query::<(&col_query::Damage)>() {
         for entity in col_solver.collisions_for(damage_q) {
-            let Some((health, target_team)) = hp_query.get_mut(*entity) else {
+            let Some((health)) = hp_query.get_mut(*entity) else {
                 continue;
             };
-            if *attack_team == *target_team {
-                continue;
-            }
             health.damage += 1;
         }
     }

@@ -54,4 +54,11 @@ game_cfg! {
         hit_cooldown: f32,
         shape: lib_col::Shape,
     },
+    stabber: Stabber {
+        speed: f32,
+        max_hp: i32,
+        hit_cooldown: f32,
+        shape: lib_col::Shape,
+        stab_box: lib_col::Shape,
+    },
 }

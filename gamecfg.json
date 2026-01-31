@@ -8,5 +8,19 @@
             "width": 16.0,
             "height": 16.0
         }
+    },
+    "stabber": {
+        "speed": 48.0,
+        "max_hp": 3,
+        "hit_cooldown": 1.0,
+        "shape": {
+            "type": "Rect",
+            "width": 16.0,
+            "height": 16.0
+        },
+        "stab_box": {
+            "type": "Circle",
+            "radius": 15.0
+        }
     }
 }
