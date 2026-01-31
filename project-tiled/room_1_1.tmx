@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="17" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#030307" nextlayerid="4" nextobjectid="19">
+ <tileset firstgid="1" source="world.tsx"/>
+ <layer id="1" name="World" width="16" height="17">
+  <data encoding="csv">
+145,146,146,146,146,146,146,146,146,0,0,0,146,146,146,147,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+193,194,194,194,194,194,194,194,194,0,0,0,194,194,194,195
+</data>
+ </layer>
+ <objectgroup id="3" name="Characters">
+  <object id="14" template="character.tx" name="Player" type="player" x="156.423" y="129.893" rotation="180"/>
+  <object id="15" template="character.tx" type="hunter" x="82.3459" y="62.0179"/>
+  <object id="16" template="character.tx" type="hunter" x="79.245" y="206.726"/>
+  <object id="17" template="character.tx" type="hunter" x="211.205" y="212.928"/>
+  <object id="18" template="character.tx" type="hunter" x="225.676" y="58.5724"/>
+ </objectgroup>
+</map>

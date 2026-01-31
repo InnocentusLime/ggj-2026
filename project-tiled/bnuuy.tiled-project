@@ -57,6 +57,26 @@
             ]
         },
         {
+            "color": "#ffff0000",
+            "drawFill": true,
+            "id": 10,
+            "members": [
+            ],
+            "name": "hunter",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
             "color": "#ff00ff00",
             "drawFill": true,
             "id": 9,

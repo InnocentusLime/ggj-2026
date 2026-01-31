@@ -48,6 +48,7 @@ pub enum CharacterInfo {
     Mask {
         id: u32,
     },
+    Hunter {},
 }
 
 impl Default for CharacterInfo {

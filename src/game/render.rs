@@ -55,6 +55,22 @@ pub fn render_mask(world: &World, render: &mut Render) {
     }
 }
 
+pub fn render_hunter(world: &World, render: &mut Render) {
+    for (_, (tf)) in &mut world.query::<(&Transform)>().with::<&Hunter>().iter() {
+        let mut tf = *tf;
+
+        tf.pos -= Vec2::splat(TILE_SIDE_F32) / 2.0;
+        render.sprite_buffer.push(SpriteData { 
+            layer: 1, 
+            tf, 
+            texture: TextureId::Mobs, 
+            rect: atlas_tile(2, 7), 
+            color: WHITE, 
+            sort_offset: 0.0, 
+        });
+    }
+}
+
 fn should_flicker() -> bool {
     let flicker_rate = 10;
     let tick = get_time() as f32 * (flicker_rate as f32);

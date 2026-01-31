@@ -4,6 +4,7 @@ mod prelude;
 mod render;
 mod stabber;
 mod mask;
+mod hunter;
 
 use lib_asset::level::*;
 use lib_asset::FontId;
@@ -88,6 +89,7 @@ impl Game for Project {
         
         if self.do_ai {
             stabber::think(dt, world, resources);
+            hunter::think(dt, world, resources);
         }
 
     }
@@ -130,6 +132,7 @@ impl Game for Project {
             render::render_player(world, render);
             render::render_stabber(world, render);
             render::render_mask(world, render);
+            render::render_hunter(world, render);
         }
     }
 
@@ -174,6 +177,7 @@ impl Game for Project {
             CharacterInfo::Player {} => player::init(builder, def.pos, resources),
             CharacterInfo::Stabber {} => stabber::init(builder, def.pos, resources),
             CharacterInfo::Mask { id } => mask::init(builder, def.pos, resources, id),
+            CharacterInfo::Hunter {} => hunter::init(builder, def.pos, resources),
         }
     }
 
