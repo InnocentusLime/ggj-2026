@@ -1,16 +1,31 @@
 pub use super::components::*;
+use hecs::Entity;
 pub use hecs::{CommandBuffer, EntityBuilder, World};
 pub use lib_game::*;
 pub use macroquad::prelude::*;
 
+pub const VISION_CAST_SHAPE: Shape = Shape::Rect { width: 4.0, height: 4.0 };
 pub const TILE_SIDE_F32: f32 = lib_asset::level::TILE_SIDE as f32;
 
-pub fn find_player(world: &World) -> Option<(Vec2, PlayerAttributes)> {
-    for (_, (tf, attrs, hp)) in world.query::<(&Transform, &PlayerAttributes, &Health)>().with::<&PlayerState>().into_iter() {
+pub fn new_vision_cast() -> VisionCast {
+    VisionCast { 
+        direction: Vec2::X, 
+        shape: VISION_CAST_SHAPE, 
+        found: None, 
+        group: col_group::PLAYER.union(col_group::LEVEL),
+    }
+}
+
+pub fn sees_player(vision: &VisionCast, player: Entity) -> bool {
+    vision.found == Some(player)
+}
+
+pub fn find_player(world: &World) -> Option<(Entity, Vec2, PlayerAttributes)> {
+    for (ent, (tf, attrs, hp)) in world.query::<(&Transform, &PlayerAttributes, &Health)>().with::<&PlayerState>().into_iter() {
         if hp.is_invulnerable {
             continue;
         }
-        return Some((tf.pos, *attrs));
+        return Some((ent, tf.pos, *attrs));
     }
     None
 }

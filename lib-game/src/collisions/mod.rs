@@ -11,6 +11,7 @@ pub use debug::*;
 const CHAR_MOVEMENT_ITERS: usize = 10;
 const CHAR_NORMAL_NUDGE: f32 = 0.001;
 const CHAR_SKIN: f32 = 0.01;
+const MAX_VISION_LENGHT: f32 = 128.0;
 
 pub struct CollisionSolver {
     solver: lib_col::CollisionSolver,
@@ -66,6 +67,8 @@ impl CollisionSolver {
         self.compute_collisions_query::<6>(world);
         self.compute_collisions_query::<7>(world);
 
+        self.compute_vision_cast_query(world);
+
         dump!("Colliders: {}", self.solver.perf().colliders_loaded);
         dump!("Shapecasts: {}", self.solver.perf().shapecast_query_count);
         dump!(
@@ -92,6 +95,21 @@ impl CollisionSolver {
                 off: start,
                 len: end - start,
             };
+        }
+    }
+
+    pub fn compute_vision_cast_query(&mut self, world: &mut World) {
+        for (_, (tf, query)) in &mut world.query::<(&Transform, &mut VisionCast)>() {
+            let result = self.solver.query_shape_cast(
+                lib_col::Collider { 
+                    tf: world_tf_to_phys(*tf), 
+                    shape: query.shape, 
+                    group: query.group, 
+                }, 
+                lib_col::conv::topleft_corner_vector_to_crate(query.direction),
+                MAX_VISION_LENGHT,
+            );
+            query.found = result.map(|x| x.0);
         }
     }
 }

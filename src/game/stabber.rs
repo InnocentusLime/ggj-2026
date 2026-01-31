@@ -17,21 +17,23 @@ pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
             col_group::PLAYER, 
             col_group::NONE,
         ),
+        new_vision_cast(),
     ));
 }
 
 pub fn think(dt: f32, world: &World, resources: &Resources) {
     let cfg = &resources.cfg;
-    for (_, (tf, kin)) in &mut world.query::<(&Transform, &mut KinematicControl)>().with::<&StabberState>().iter() {
-        let Some((player, attrs)) = find_player(world) else {
+    for (_, (tf, kin, vision)) in &mut world.query::<(&Transform, &mut KinematicControl, &mut VisionCast)>().with::<&StabberState>().iter() {
+        let Some((player, player_pos, attrs)) = find_player(world) else {
             kin.dr = Vec2::ZERO;
             continue;
         };
-        if attrs.invisible_to_grunts {
+        let player_dir = (player_pos - tf.pos).normalize_or_zero();
+        vision.direction = player_dir;
+        if attrs.invisible_to_grunts || !sees_player(vision, player) {
             kin.dr = Vec2::ZERO;
             continue;
         }
-        let player_dir = (player - tf.pos).normalize_or_zero();
         kin.dr = player_dir * cfg.stabber.speed * dt;
     }
 }

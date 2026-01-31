@@ -1,8 +1,17 @@
+use hecs::Entity;
 use macroquad::prelude::*;
 
 pub use lib_col::{Group, Shape};
 
 pub const MAX_COLLISION_QUERIES: usize = 8;
+
+#[derive(Clone, Copy, Debug)]
+pub struct VisionCast {
+    pub direction: Vec2,
+    pub shape: Shape,
+    pub found: Option<Entity>,
+    pub group: Group,
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct CollisionQuery<const ID: usize> {
