@@ -1,11 +1,9 @@
 use super::prelude::*;
 
 pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources, mask_id: u32) {
-    let pos = if resources.is_start {
-        pos
-    } else {
-        resources.player_pos
-    };
+    if resources.mask_unlock[mask_id as usize] {
+        return;
+    }
     builder.add_bundle((
         Transform::from_pos(pos),
         Mask(mask_id),
