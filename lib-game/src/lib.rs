@@ -389,7 +389,7 @@ impl App {
             }
             AppState::Start if input.confirmation_detected => {
                 self.state = AppState::Active { paused: false };
-                self.queued_level = Some(LevelId::TestRoom);
+                self.queued_level = Some(LevelId(uvec2(0, 0)));
             }
             AppState::Active { paused } if input.pause_requested => {
                 self.state = AppState::Active { paused: !paused };

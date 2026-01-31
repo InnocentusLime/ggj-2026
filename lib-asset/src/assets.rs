@@ -3,7 +3,9 @@ use crate::DevableAsset;
 use crate::level::LevelDef;
 use crate::{Asset, FsResolver};
 use crate::{GameCfg, asset_roots::*};
+use anyhow::{anyhow, bail, ensure, Context};
 use macroquad::prelude::*;
+use strum::VariantArray;
 use std::path::Path;
 
 #[derive(
@@ -36,13 +38,20 @@ impl Asset for Texture2D {
         Ok(tex)
     }
 
-    fn filename(id: Self::AssetId) -> &'static str {
+    fn filename(id: Self::AssetId) -> String {
         match id {
             TextureId::Objs => "objs.png",
             TextureId::Items => "items.png",
             TextureId::Mobs => "mobs.png",
             TextureId::World => "world.png",
-        }
+        }.to_string()
+    }
+    
+    fn inverse_resolve(filename: &Path) -> anyhow::Result<Self::AssetId> {
+        TextureId::VARIANTS.iter()
+            .copied()
+            .find(|x| &Self::filename(*x) == filename)
+            .ok_or_else(|| anyhow!("{filename:?} does not correspond to a texture"))
     }
 }
 
@@ -71,10 +80,14 @@ impl Asset for Font {
         Ok(font)
     }
 
-    fn filename(id: Self::AssetId) -> &'static str {
+    fn filename(id: Self::AssetId) -> String {
         match id {
-            FontId::Quaver => "quaver.ttf",
+            FontId::Quaver => "quaver.ttf".to_string(),
         }
+    }
+    
+    fn inverse_resolve(_filename: &Path) -> anyhow::Result<Self::AssetId> {
+        todo!()
     }
 }
 
@@ -87,12 +100,10 @@ impl Asset for Font {
     PartialEq,
     Eq,
     Hash,
-    strum::IntoStaticStr,
-    strum::VariantArray,
 )]
-pub enum LevelId {
-    TestRoom,
-}
+#[repr(transparent)]
+#[serde(transparent)]
+pub struct LevelId(pub UVec2);
 
 #[cfg(feature = "dev-env")]
 impl DevableAsset for LevelDef {
@@ -106,6 +117,8 @@ impl DevableAsset for LevelDef {
         tiled_load::load_level(resolver, tiled_path)
     }
 }
+
+const ROOM_PREFIX: &str = "room";
 
 impl Asset for LevelDef {
     type AssetId = LevelId;
@@ -126,10 +139,22 @@ impl Asset for LevelDef {
         serde_json::from_str(&json).context("decoding")
     }
 
-    fn filename(id: Self::AssetId) -> &'static str {
-        match id {
-            LevelId::TestRoom => "test_room.json",
-        }
+    fn filename(id: Self::AssetId) -> String {
+        format!("{ROOM_PREFIX}_{}_{}.json", id.0.x, id.0.y)
+    }
+    
+    fn inverse_resolve(filename: &Path) -> anyhow::Result<Self::AssetId> {
+        let Some(filename) = filename.to_str() else {
+            bail!("{filename:?} is not a valid UTF8 string");
+        };
+        let pieces = filename.split('_').collect::<Vec<_>>();
+        ensure!(pieces.len() == 3, "filename must be 3 pieces, separated with \"_\"");
+        ensure!(pieces[0] == ROOM_PREFIX, "piece 1 must be {ROOM_PREFIX:?}");
+        let x = pieces[1].parse()
+            .with_context(|| format!("{:?} is not a valid integer", pieces[1]))?;
+        let y = pieces[2].parse()
+            .with_context(|| format!("{:?} is not a valid integer", pieces[1]))?;
+        Ok(LevelId(uvec2(x, y)))
     }
 }
 
@@ -146,12 +171,16 @@ impl Asset for GameCfg {
         serde_json::from_str(&json).context("decoding")
     }
 
-    fn filename(_id: Self::AssetId) -> &'static str {
-        "gamecfg.json"
+    fn filename(_id: Self::AssetId) -> String {
+        "gamecfg.json".to_string()
+    }
+    
+    fn inverse_resolve(_filename: &Path) -> anyhow::Result<Self::AssetId> {
+       bail!("Unsupported") 
     }
 }
 
-#[derive(Debug, Clone, Copy, strum::VariantArray, strum::IntoStaticStr, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum GameCfgId {
     Cfg,
 }

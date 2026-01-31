@@ -65,12 +65,6 @@ impl DebugStuff {
             "hw" => app.render_world = false,
             "sw" => app.render_world = true,
             "reset" => app.state = AppState::Start,
-            "l" => {
-                for level_id in LevelId::VARIANTS {
-                    let l_name: &'static str = level_id.into();
-                    info!("Level {l_name}: {}", LevelDef::filename(*level_id));
-                }
-            }
             "load" => {
                 if cmd.args.is_empty() {
                     error!("Not enough args");

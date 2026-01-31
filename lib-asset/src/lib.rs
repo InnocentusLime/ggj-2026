@@ -32,16 +32,7 @@ impl FsResolver {
     }
 
     pub fn inverse_resolve<A: Asset>(&self, path: &Path) -> anyhow::Result<A::AssetId> {
-        let got_file = self.get_filename(A::ROOT, path)?;
-        let item = <A::AssetId as VariantArray>::VARIANTS
-            .iter()
-            .map(|id| (id, A::filename(*id)))
-            .find(|(_, file)| got_file.as_os_str() == std::ffi::OsStr::new(file));
-
-        match item {
-            Some((id, _)) => Ok(*id),
-            None => anyhow::bail!("{path:?} does not correspond to any asset"),
-        }
+        A::inverse_resolve(self.get_filename(A::ROOT, path)?)
     }
 
     pub async fn load<A: Asset>(&self, id: A::AssetId) -> anyhow::Result<A> {
@@ -91,7 +82,7 @@ pub trait DevableAsset: Sized {
 }
 
 pub trait Asset: Sized {
-    type AssetId: Copy + strum::VariantArray;
+    type AssetId;
     const ROOT: AssetRoot;
 
     fn load(
@@ -99,5 +90,7 @@ pub trait Asset: Sized {
         path: &Path,
     ) -> impl Future<Output = anyhow::Result<Self>> + Send;
 
-    fn filename(id: Self::AssetId) -> &'static str;
+    fn filename(id: Self::AssetId) -> String;
+
+    fn inverse_resolve(filename: &Path) -> anyhow::Result<Self::AssetId>;
 }

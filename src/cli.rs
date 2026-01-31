@@ -1,8 +1,8 @@
 use std::error::Error;
 
 use clap::Parser;
-use lib_game::{App, AppState, LevelId, resolve_level};
-use strum::VariantArray;
+use glam::uvec2;
+use lib_game::{App, AppState, LevelId};
 
 pub type ErrBox = Box<dyn Error + Send + Sync>;
 
@@ -23,8 +23,9 @@ pub struct Args {
 }
 
 fn parse_level_id(s: &str) -> Result<LevelId, ErrBox> {
-    resolve_level(s).ok_or_else(|| {
-        let levels = LevelId::VARIANTS;
-        format!("Unknown level name. Known are: {levels:?}").into()
-    })
+    let pieces = s.split('_').collect::<Vec<_>>();
+    Ok(LevelId(uvec2(
+        pieces[0].parse().unwrap(), 
+        pieces[1].parse().unwrap(),
+    ))) 
 }
