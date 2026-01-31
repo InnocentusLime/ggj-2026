@@ -3,7 +3,7 @@ mod player;
 mod prelude;
 
 use lib_asset::level::*;
-use lib_asset::{FontId, TextureId};
+use lib_asset::FontId;
 use prelude::*;
 
 fn decide_next_state(world: &mut World) -> Option<AppState> {
@@ -24,7 +24,6 @@ async fn load_resources(resources: &mut Resources) {
     set_default_filter_mode(FilterMode::Nearest);
 
     resources.load_font(FontId::Quaver).await;
-    resources.load_texture(TextureId::BunnyAtlas).await;
     build_textures_atlas();
 }
 
@@ -40,7 +39,7 @@ impl Project {
     pub async fn new(app: &mut App) -> Project {
         load_resources(&mut app.resources).await;
 
-        let mut proj = Project {
+        let proj = Project {
             do_player_controls: true,
             do_ai: true,
             transitions: Vec::new(),
@@ -130,11 +129,16 @@ impl Game for Project {
         builder: &mut hecs::EntityBuilder,
         tile_x: u32,
         tile_y: u32,
-        tile: TileIdx,
+        tile: Option<TileIdx>,
     ) {
-        let ty = resources.level.map.tiles[&tile].ty;
         let tile_pos =
             vec2(tile_x as f32, tile_y as f32) * TILE_SIDE_F32 + Vec2::splat(TILE_SIDE_F32 / 2.0);
+        let Some(tile) = tile else {
+            builder.add(Transform::from_pos(tile_pos));
+            builder.add(TileTy::Wall);
+            return;
+        };
+        let ty = resources.level.map.tiles[&tile].ty;
 
         builder.add(Transform::from_pos(tile_pos));
         builder.add(ty);

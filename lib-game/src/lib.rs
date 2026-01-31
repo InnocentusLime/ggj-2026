@@ -43,7 +43,7 @@ pub struct DebugCommand {
     pub args: Vec<String>,
 }
 
-use hecs::{CommandBuffer, Entity, World};
+use hecs::{CommandBuffer, World};
 use macroquad::prelude::*;
 
 const GAME_TICKRATE: f32 = 1.0 / 60.0;
@@ -137,7 +137,7 @@ pub trait Game: 'static {
         builder: &mut EntityBuilder,
         tile_x: u32,
         tile_y: u32,
-        tile: TileIdx,
+        tile: Option<TileIdx>,
     );
 
     fn init_character(&self, resources: &Resources, builder: &mut EntityBuilder, def: CharacterDef);
@@ -266,7 +266,7 @@ impl App {
         self.resources.load_texture(level.map.atlas).await;
         self.render.set_atlas(
             &self.resources,
-            TextureId::WorldAtlas,
+            level.map.atlas,
             level.map.atlas_margin,
             level.map.atlas_spacing,
         );

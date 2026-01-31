@@ -171,7 +171,7 @@ impl DebugStuff {
 
     fn dump_archetypes(&self, app: &mut App) {
         let mut total_archetypes = 0;
-        for arch in app.world.archetypes() {
+        for _arch in app.world.archetypes() {
             total_archetypes += 1;
         }
 

@@ -57,7 +57,7 @@ impl Render {
     pub fn new() -> Self {
         Self {
             ui_font: FontId::Quaver,
-            tilemap_atlas: TextureId::WorldAtlas,
+            tilemap_atlas: TextureId::World,
             tilemap_tiles: Vec::new(),
             announcement_text: None,
             sprite_buffer: Vec::new(),
@@ -131,10 +131,11 @@ impl Render {
         self.tilemap_tiles.clear();
         self.tilemap_tiles
             .reserve((atlas_tiles_x * atlas_tiles_y) as usize);
-        for x in 0..atlas_tiles_x {
-            for y in 0..atlas_tiles_y {
+        for y in 0..atlas_tiles_y {
+            for x in 0..atlas_tiles_x {
                 let tex_x = (TILE_SIDE + atlas_spacing) * x + atlas_margin;
                 let tex_y = (TILE_SIDE + atlas_spacing) * y + atlas_margin;
+                info!("{}: {tex_x},{tex_y}", self.tilemap_tiles.len());
                 self.tilemap_tiles.push(Rect {
                     x: tex_x as f32,
                     y: tex_y as f32,

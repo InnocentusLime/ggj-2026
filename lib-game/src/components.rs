@@ -1,4 +1,3 @@
-use hecs::Entity;
 use macroquad::prelude::*;
 
 #[derive(Clone, Copy, Debug)]

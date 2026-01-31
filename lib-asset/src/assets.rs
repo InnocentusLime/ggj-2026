@@ -3,13 +3,8 @@ use crate::DevableAsset;
 use crate::level::LevelDef;
 use crate::{Asset, FsResolver};
 use crate::{GameCfg, asset_roots::*};
-#[cfg(feature = "dev-env")]
-use clap::ValueEnum;
-#[cfg(feature = "dev-env")]
-use clap::builder::PossibleValue;
 use macroquad::prelude::*;
 use std::path::Path;
-use strum::VariantArray;
 
 #[derive(
     Default,
@@ -25,9 +20,11 @@ use strum::VariantArray;
     strum::VariantArray,
 )]
 pub enum TextureId {
-    BunnyAtlas,
+    Objs,
+    Items,
+    Mobs,
     #[default]
-    WorldAtlas,
+    World,
 }
 
 impl Asset for Texture2D {
@@ -41,8 +38,10 @@ impl Asset for Texture2D {
 
     fn filename(id: Self::AssetId) -> &'static str {
         match id {
-            TextureId::BunnyAtlas => "bnuuy.png",
-            TextureId::WorldAtlas => "world.png",
+            TextureId::Objs => "objs.png",
+            TextureId::Items => "items.png",
+            TextureId::Mobs => "mobs.png",
+            TextureId::World => "world.png",
         }
     }
 }
@@ -93,8 +92,6 @@ impl Asset for Font {
 )]
 pub enum LevelId {
     TestRoom,
-    TestBulletRoom,
-    TestShooterRoom,
 }
 
 #[cfg(feature = "dev-env")]
@@ -132,8 +129,6 @@ impl Asset for LevelDef {
     fn filename(id: Self::AssetId) -> &'static str {
         match id {
             LevelId::TestRoom => "test_room.json",
-            LevelId::TestBulletRoom => "test_bullet_room.json",
-            LevelId::TestShooterRoom => "test_shooter_room.json",
         }
     }
 }
