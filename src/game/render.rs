@@ -4,17 +4,14 @@ use super::prelude::*;
 use crate::game::prelude::PlayerState;
 
 pub fn render_player(world: &World, render: &mut Render) {
-    for (_, (tf, body, health)) in &mut world.query::<(&Transform, &BodyTag, &Health)>().with::<&PlayerState>().iter() {
-        let Shape::Rect { width, height } = body.shape else {
-            continue;
-        };
+    for (_, (tf, health)) in &mut world.query::<(&Transform, &Health)>().with::<&PlayerState>().iter() {
         let mut tf = *tf;
         let mut player_color = WHITE;
         if should_flicker() && health.is_invulnerable {
             player_color.a = 0.5;
         }
         
-        tf.pos -= vec2(width, height) / 2.0;
+        tf.pos -= Vec2::splat(TILE_SIDE_F32) / 2.0;
         render.sprite_buffer.push(SpriteData { 
             layer: 1, 
             tf, 
@@ -27,13 +24,10 @@ pub fn render_player(world: &World, render: &mut Render) {
 }
 
 pub fn render_stabber(world: &World, render: &mut Render) {
-    for (_, (tf, body)) in &mut world.query::<(&Transform, &BodyTag)>().with::<&StabberState>().iter() {
-        let Shape::Rect { width, height } = body.shape else {
-            continue;
-        };
+    for (_, (tf)) in &mut world.query::<(&Transform)>().with::<&StabberState>().iter() {
         let mut tf = *tf;
 
-        tf.pos -= vec2(width, height) / 2.0;
+        tf.pos -= Vec2::splat(TILE_SIDE_F32) / 2.0;
         render.sprite_buffer.push(SpriteData { 
             layer: 1, 
             tf, 

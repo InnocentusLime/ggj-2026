@@ -158,6 +158,7 @@ impl Render {
         camera: &dyn Camera,
         render_world: bool,
         draw_ui: impl FnOnce(&dyn Camera),
+        debug_draw: impl FnOnce(),
     ) {
         set_camera(camera);
         clear_background(Color {
@@ -172,10 +173,11 @@ impl Render {
                 0.0, 0.0, 
                 TILE_SIDE as f32 * 16.0,
                 TILE_SIDE as f32 * 17.0,
-                DARKBLUE,
+                Color::from_rgba(0, 0, 25, 255),
             );
             self.draw_sprites(resources);
             self.draw_texts(resources);
+            debug_draw();
         }
 
         draw_ui(camera);
@@ -200,14 +202,6 @@ impl Render {
             WHITE, 
             screen_params,
         );
-    }
-
-    pub fn debug_render<F>(&mut self, camera: &dyn Camera, code: F)
-    where
-        F: FnOnce(),
-    {
-        set_camera(camera);
-        code();
     }
 
     fn draw_sprites(&mut self, resources: &Resources) {

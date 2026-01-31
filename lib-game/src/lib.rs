@@ -250,7 +250,20 @@ impl App {
                 }
             }
 
-            self.game_present(real_dt, game);
+            self.update_camera();
+            self.render.new_frame();
+            self.render.buffer_tiles(&mut self.world);
+            game.render_export(&self.state, &self.resources, &self.world, &mut self.render);
+            self.render.render(
+                &self.resources, 
+                &self.camera, 
+                self.render_world, 
+                |cam| game.draw_ui(&self.world, &self.resources, cam),
+                #[cfg(not(feature = "dbg"))]
+                || {},
+                #[cfg(feature = "dbg")]
+                || debug.debug_draw(&self.world, &self.resources),
+            );
 
             #[cfg(feature = "dbg")]
             debug.draw(&mut self);
@@ -355,19 +368,6 @@ impl App {
             game.init_character(&self.resources, &mut builder, *def);
             self.world.spawn(builder.build());
         }
-    }
-
-    fn game_present<G: Game>(&mut self, real_dt: f32, game: &G) {
-        self.update_camera();
-        self.render.new_frame();
-        self.render.buffer_tiles(&mut self.world);
-        game.render_export(&self.state, &self.resources, &self.world, &mut self.render);
-        self.render.render(
-            &self.resources, 
-            &self.camera, 
-            self.render_world, 
-            |cam| game.draw_ui(&self.world, &self.resources, cam),
-        );
     }
 
     fn game_update<G: Game>(&mut self, input: &InputModel, game: &mut G) -> Option<AppState> {

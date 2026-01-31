@@ -151,14 +151,14 @@ impl DebugStuff {
         self.dump_archetypes(app);
         GLOBAL_DUMP.lock();
 
-        app.render.debug_render(&app.camera, || {
-            for debug_draw_name in self.enabled_debug_draws.iter() {
-                let draw = self.debug_draws[debug_draw_name];
-                draw(&app.world, &app.resources);
-            }
-        });
-
         egui_macroquad::draw();
+    }
+
+    pub fn debug_draw(&self, world: &World, resources: &Resources) {
+        for debug_draw_name in self.enabled_debug_draws.iter() {
+            let draw = self.debug_draws[debug_draw_name];
+            draw(world, resources);
+        }
     }
 
     fn dump_archetypes(&self, app: &mut App) {
