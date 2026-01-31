@@ -10,3 +10,6 @@ pub enum StabberState {
 
 #[derive(Debug, Clone, Copy)]
 pub struct CurrentMask(pub u32);
+
+#[derive(Debug, Clone, Copy)]
+pub struct Mask(pub u32);

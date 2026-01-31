@@ -45,6 +45,9 @@ pub struct CharacterDef {
 pub enum CharacterInfo {
     Player {},
     Stabber {},
+    Mask {
+        id: u32,
+    },
 }
 
 impl Default for CharacterInfo {

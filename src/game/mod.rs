@@ -3,6 +3,7 @@ mod player;
 mod prelude;
 mod render;
 mod stabber;
+mod mask;
 
 use lib_asset::level::*;
 use lib_asset::FontId;
@@ -110,10 +111,11 @@ impl Game for Project {
         dt: f32,
         resources: &mut lib_game::Resources,
         world: &mut World,
-        _collisions: &CollisionSolver,
+        collisions: &CollisionSolver,
         cmds: &mut CommandBuffer,
     ) -> Option<lib_game::AppState> {
         player::publish_pos(world, resources);
+        mask::pickup(world, resources, collisions, cmds);
         decide_next_state(world)
     }
 
@@ -127,6 +129,7 @@ impl Game for Project {
         if app_state.is_presentable() { 
             render::render_player(world, render);
             render::render_stabber(world, render);
+            render::render_mask(world, render);
         }
     }
 
@@ -170,6 +173,7 @@ impl Game for Project {
         match def.info {
             CharacterInfo::Player {} => player::init(builder, def.pos, resources),
             CharacterInfo::Stabber {} => stabber::init(builder, def.pos, resources),
+            CharacterInfo::Mask { id } => mask::init(builder, def.pos, resources, id),
         }
     }
 
