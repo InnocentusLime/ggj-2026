@@ -4,8 +4,56 @@ use crate::level::LevelDef;
 use crate::{Asset, FsResolver};
 use crate::{GameCfg, asset_roots::*};
 use anyhow::{anyhow, bail, ensure, Context};
+use macroquad::audio::{load_sound, Sound};
 use macroquad::prelude::*;
 use strum::VariantArray;
+
+#[derive(
+    Default,
+    Debug,
+    Clone,
+    Copy,
+    serde::Serialize,
+    serde::Deserialize,
+    PartialEq,
+    Eq,
+    Hash,
+    strum::IntoStaticStr,
+    strum::VariantArray,
+)]
+pub enum SoundId {
+    #[default]
+    Swoosh,
+    Hurt,
+    Pickup,
+    Open,
+}
+
+impl Asset for Sound {
+    type AssetId = SoundId;
+    const ROOT: AssetRoot = AssetRoot::Assets;
+
+    async fn load(_resolver: &FsResolver, path: &Path) -> anyhow::Result<Self> {
+        let tex = load_sound(&path.to_string_lossy()).await?;
+        Ok(tex)
+    }
+
+    fn filename(id: Self::AssetId) -> String {
+        match id {
+            SoundId::Swoosh => "swoosh.wav",
+            SoundId::Hurt => "hurt.wav",
+            SoundId::Pickup => "pickup.wav",
+            SoundId::Open => "open.wav",
+        }.to_string()
+    }
+    
+    fn inverse_resolve(filename: &Path) -> anyhow::Result<Self::AssetId> {
+        SoundId::VARIANTS.iter()
+            .copied()
+            .find(|x| &Self::filename(*x) == filename.to_str().unwrap())
+            .ok_or_else(|| anyhow!("{filename:?} does not correspond to a sound"))
+    }
+}
 use std::path::Path;
 
 #[derive(

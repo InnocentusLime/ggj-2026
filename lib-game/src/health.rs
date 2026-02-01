@@ -1,6 +1,8 @@
 use crate::{col_query, CollisionSolver, DamageCooldown, Health, ObjId, Resources, Team};
 
 use hecs::{CommandBuffer, World};
+use lib_asset::SoundId;
+use macroquad::audio::{play_sound, PlaySoundParams};
 
 pub fn reset(world: &mut World) {
     for (_, hp) in world.query_mut::<&mut Health>() {
@@ -36,7 +38,7 @@ pub fn apply_damage(world: &mut World) {
     }
 }
 
-pub fn collect_damage(world: &mut World, col_solver: &CollisionSolver) {
+pub fn collect_damage(world: &mut World, col_solver: &CollisionSolver, resources: &Resources) {
     let mut hp_query = world.query::<(&mut Health)>();
     let mut hp_query = hp_query.view();
     for (_, (damage_q)) in &mut world.query::<(&col_query::Damage)>() {
@@ -45,6 +47,12 @@ pub fn collect_damage(world: &mut World, col_solver: &CollisionSolver) {
                 continue;
             };
             health.damage += 1;
+            if !health.is_invulnerable {
+                play_sound(&resources.sounds[&SoundId::Hurt],PlaySoundParams {
+                    looped: false,
+                    volume: 0.4,
+                })
+            }
         }
     }
 }

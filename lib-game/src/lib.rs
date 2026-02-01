@@ -44,7 +44,7 @@ pub struct DebugCommand {
 }
 
 use hecs::{CommandBuffer, World};
-use macroquad::prelude::*;
+use macroquad::{audio::Sound, prelude::*};
 
 const GAME_TICKRATE: f32 = 1.0 / 60.0;
 
@@ -397,7 +397,7 @@ impl App {
 
         self.col_solver.compute_collisions(&mut self.world);
 
-        health::collect_damage(&mut self.world, &self.col_solver);
+        health::collect_damage(&mut self.world, &self.col_solver, &self.resources);
         health::apply_damage(&mut self.world);
         health::apply_cooldown(&mut self.world);
         health::despawn_on_zero_health(&mut self.world, &mut self.cmds, &mut self.resources);
@@ -563,6 +563,7 @@ pub struct Resources {
     pub player_pos: Vec2,
     pub textures: HashMap<TextureId, Texture2D>,
     pub fonts: HashMap<FontId, Font>,
+    pub sounds: HashMap<SoundId, Sound>,
     pub masks: Vec<PlayerAttributes>,
     pub mask_unlock: Vec<bool>,
     pub key_unlock: [bool; 2],
@@ -582,6 +583,7 @@ impl Resources {
             level: LevelDef::default(),
             textures: HashMap::new(),
             fonts: HashMap::new(),
+            sounds: HashMap::new(),
             masks: Vec::new(),
             mask_unlock: Vec::new(),
             key_unlock: [false; 2],
@@ -589,6 +591,11 @@ impl Resources {
             current_mask: 0,
             kill_memory: HashSet::new(),
         }
+    }
+
+    pub async fn load_sound(&mut self, sound_id: SoundId) {
+        let sound = self.resolver.load(sound_id).await.unwrap();
+        self.sounds.insert(sound_id, sound);
     }
 
     pub async fn load_texture(&mut self, texture_id: TextureId) {

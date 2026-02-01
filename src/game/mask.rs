@@ -1,3 +1,5 @@
+use macroquad::audio::{play_sound, PlaySoundParams};
+
 use super::prelude::*;
 
 pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources, mask_id: u32) {
@@ -22,5 +24,9 @@ pub fn pickup(world: &World, resources: &mut Resources, collisions: &CollisionSo
         }
         cmds.despawn(ent);
         resources.mask_unlock[mask.0 as usize] = true;
+        play_sound(&resources.sounds[&SoundId::Pickup], PlaySoundParams {
+            looped: false,
+            volume: 0.6,
+        });
     }
 }

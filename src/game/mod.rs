@@ -36,6 +36,10 @@ async fn load_resources(resources: &mut Resources) {
     resources.load_texture(TextureId::World).await;
     resources.load_texture(TextureId::Items).await;
     resources.load_texture(TextureId::Objs).await;
+    resources.load_sound(SoundId::Hurt).await;
+    resources.load_sound(SoundId::Open).await;
+    resources.load_sound(SoundId::Pickup).await;
+    resources.load_sound(SoundId::Swoosh).await;
     build_textures_atlas();
 }
 
