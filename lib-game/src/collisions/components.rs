@@ -97,6 +97,7 @@ pub mod col_group {
     pub const PLAYER: Group = Group::from_id(2);
     pub const ATTACKS: Group = Group::from_id(3);
     pub const ENEMY: Group = Group::from_id(4);
+    pub const GRUNT: Group = Group::from_id(5);
 }
 
 pub mod col_query {

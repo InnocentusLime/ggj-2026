@@ -99,13 +99,14 @@ impl Game for Project {
         _dt: f32,
         resources: &lib_game::Resources,
         world: &mut World,
-        _cmds: &mut CommandBuffer,
+        cmds: &mut CommandBuffer,
     ) {
         if self.do_ai {
             for anim_sync in &self.anim_syncs {
                 anim_sync(world, resources);
             }
         }
+        player::spawn_attack(world, cmds);
     }
 
     fn update(
@@ -117,6 +118,7 @@ impl Game for Project {
         cmds: &mut CommandBuffer,
     ) -> Option<lib_game::AppState> {
         player::publish_pos(world, resources);
+        player::tick_attack(dt, world, cmds);
         mask::pickup(world, resources, collisions, cmds);
         decide_next_state(world)
     }
@@ -133,6 +135,7 @@ impl Game for Project {
             render::render_stabber(world, render);
             render::render_mask(world, render);
             render::render_hunter(world, render);
+            render::render_attack(world, render);
         }
     }
 

@@ -334,7 +334,7 @@ impl App {
 
         // top
         if level_id.0.y < self.resources.level_id.0.y {
-            self.resources.player_pos.x = level_height - 2.0 * tile_side; 
+            self.resources.player_pos.y = level_height - 2.0 * tile_side; 
         }
 
         // right

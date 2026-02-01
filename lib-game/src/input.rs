@@ -20,9 +20,11 @@ pub struct InputModel {
 
 impl InputModel {
     pub fn capture(camera: &Camera2D) -> Self {
-        let (mx, my) = mouse_position();
+        let (mx, mut my) = mouse_position();
+        my = screen_height() - my;
         let aim = camera.screen_to_world(vec2(mx, my));
 
+        
         // TODO: handle mobile
         let left_movement_down = is_key_down(KeyCode::A) || is_key_down(KeyCode::Left);
         let right_movement_down = is_key_down(KeyCode::D) || is_key_down(KeyCode::Right);

@@ -1,4 +1,8 @@
+use core::f32;
+
 use super::prelude::*;
+
+pub const PLAYER_ATTACK_DELAY: f32 = 1.0;
 
 pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
     let pos = if resources.is_start {
@@ -19,6 +23,8 @@ pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
         },
         PlayerAttributes::default(),
         CurrentMask(resources.current_mask),
+        AttackCooldown(0.0),
+        LookAngle(0.0),
     ));
 }
 
@@ -44,12 +50,16 @@ pub fn controls(dt: f32, input: &InputModel, world: &mut World, resources: &Reso
     }
     walk_dir = walk_dir.normalize_or_zero();
 
-    for (_, control) in world.query_mut::<&mut KinematicControl>().with::<&PlayerState>() {
+    for (_, (tf, control, look)) in world.query_mut::<(&Transform, &mut KinematicControl, &mut LookAngle)>().with::<&PlayerState>() {
         if do_walk {
             control.dr = walk_dir * dt * cfg.player.speed;
         } else {
             control.dr = Vec2::ZERO;
         }
+        let mut look_dir = (input.aim - tf.pos).normalize_or(Vec2::X);
+        // look_dir.y *= -1.0;
+        look.0 = look_dir.to_angle();
+        dump!("aim: {} pos: {}", input.aim, tf.pos);
 
         if let Some(mask) = input.mask_request {
             info!("Mask queued: {mask}");
@@ -68,6 +78,52 @@ pub fn controls(dt: f32, input: &InputModel, world: &mut World, resources: &Reso
         }
         info!("new_mas: {new_mask}");
         mask.0 = new_mask;
+    }
+
+    for (_, (attrs, cooldown)) in world.query_mut::<(&PlayerAttributes, &mut AttackCooldown)>().with::<&PlayerState>() {
+        if !attrs.strong_against_grunts {
+            continue;
+        }
+        cooldown.0 -= dt;
+        if cooldown.0 > 0.0 {
+            continue;
+        }
+        if input.attack_down {
+            cooldown.0 = PLAYER_ATTACK_DELAY;
+        }
+    }
+}
+
+pub fn spawn_attack(world: &mut World, cmds: &mut CommandBuffer) {
+    for (_, (tf, angle, cooldown)) in world.query_mut::<(&Transform, &LookAngle, &mut AttackCooldown)>().with::<&PlayerState>() {
+        if cooldown.0 != PLAYER_ATTACK_DELAY {
+            continue;
+        }
+        cmds.spawn((
+            Transform {
+                pos: tf.pos + 10.0 * Vec2::from_angle(angle.0),
+                angle: angle.0,
+            },
+            Attack,
+            col_query::Damage::new(
+                Shape::Rect { 
+                    width: 4.0, 
+                    height: 10.0, 
+                }, 
+                col_group::GRUNT, 
+                col_group::NONE,
+            ),
+            Lifetime(0.3),
+        ));
+    }
+}
+
+pub fn tick_attack(dt: f32, world: &mut World, cmds: &mut CommandBuffer) {
+    for (ent, tick) in &mut world.query::<&mut Lifetime>().with::<&Attack>() {
+        tick.0 -= dt;
+        if tick.0 < 0.0 {
+            cmds.despawn(ent);
+        }
     }
 }
 

@@ -9,7 +9,7 @@ pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
         Transform::from_pos(pos),
         Health::new(cfg.stabber.max_hp),
         BodyTag {
-            groups: col_group::CHARACTERS.union(col_group::ENEMY),
+            groups: col_group::CHARACTERS.union(col_group::ENEMY).union(col_group::GRUNT),
             shape: cfg.stabber.shape,
         },
         col_query::Damage::new(
@@ -34,6 +34,10 @@ pub fn think(dt: f32, world: &World, resources: &Resources) {
             kin.dr = Vec2::ZERO;
             continue;
         }
-        kin.dr = player_dir * cfg.stabber.speed * dt;
+        let mut speed = cfg.stabber.speed;
+        if attrs.strong_against_grunts {
+            speed /= 3.0;
+        }
+        kin.dr = player_dir * speed * dt;
     }
 }
