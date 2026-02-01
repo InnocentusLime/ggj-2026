@@ -32,7 +32,7 @@ impl InputModel {
         let down_movement_down = is_key_down(KeyCode::S) || is_key_down(KeyCode::Down);
         let confirmation_detected =
             is_key_pressed(KeyCode::Space) || is_mouse_button_pressed(MouseButton::Left);
-        let pause_requested = is_key_pressed(KeyCode::Escape);
+        let pause_requested = is_key_pressed(KeyCode::P);
         let fullscreen_toggle_requested = is_key_pressed(KeyCode::F11);
         let attack_down = is_mouse_button_down(MouseButton::Left);
         let console_toggle_requested =

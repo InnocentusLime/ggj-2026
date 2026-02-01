@@ -131,7 +131,7 @@ pub trait Game: 'static {
         render: &mut Render,
     );
 
-    fn draw_ui(&self, world: &World, resources: &Resources, cam: &dyn Camera);
+    fn draw_ui(&self, world: &World, resources: &Resources, app_state: AppState);
 
     fn init_tile(
         &self,
@@ -151,7 +151,7 @@ impl AppState {
     pub fn is_presentable(&self) -> bool {
         matches!(
             self,
-            AppState::Active { .. } | AppState::GameOver | AppState::Win | AppState::DebugFreeze
+            AppState::Active { .. } | AppState::Win | AppState::DebugFreeze
         )
     }
 }
@@ -262,7 +262,7 @@ impl App {
                 &self.resources, 
                 &self.camera, 
                 self.render_world, 
-                |cam| game.draw_ui(&self.world, &self.resources, cam),
+                |_cam| game.draw_ui(&self.world, &self.resources, self.state),
                 #[cfg(not(feature = "dbg"))]
                 || {},
                 #[cfg(feature = "dbg")]
@@ -496,8 +496,9 @@ impl App {
 
         /* Normal state transitions */
         match self.state {
-            AppState::GameDone | AppState::GameOver if input.confirmation_detected => {
-                self.state = AppState::Start;
+            AppState::GameOver if input.confirmation_detected => {
+                self.state = AppState::Active { paused: false };
+                self.queued_level = Some(LevelId(uvec2(0, 0)));
             }
             AppState::Win if input.confirmation_detected => {
                 self.state = AppState::GameDone;

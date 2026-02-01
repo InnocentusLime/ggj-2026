@@ -137,7 +137,7 @@ impl Game for Project {
         world: &World,
         render: &mut Render,
     ) {
-        if app_state.is_presentable() { 
+        if app_state.is_presentable() && *app_state != (AppState::Active { paused: true }) { 
             render::render_player(world, render);
             render::render_stabber(world, render);
             render::render_mask(world, render);
@@ -194,7 +194,17 @@ impl Game for Project {
         }
     }
 
-    fn draw_ui(&self, world: &World, resources: &Resources, cam: &dyn Camera) {
+    fn draw_ui(&self, world: &World, resources: &Resources, app_state: AppState) {
+        if !app_state.is_presentable() {
+            draw_unpresentable_ui(true, app_state, resources);
+            return;
+        }
+
+        if app_state == (AppState::Active { paused: true }) {
+            draw_unpresentable_ui(false, app_state, resources);
+            return;
+        }
+
         let player_hp = player_health(world);
         let heart_params = DrawTextureParams {
             dest_size: None,
@@ -278,6 +288,41 @@ impl Game for Project {
                 },
             );
         }
+    }
+}
+            
+fn draw_unpresentable_ui(hide: bool, app_state: AppState, resources: &Resources) {
+    if hide {
+        draw_rectangle(0.0, 0.0, 16.0 * TILE_SIDE_F32, 17.0 * TILE_SIDE_F32, BLACK);
+    }
+
+    let font = &resources.fonts[&FontId::Quaver];
+    let params = TextParams { 
+        font: Some(font), 
+        font_size: 16, 
+        font_scale: 1.0, 
+        font_scale_aspect: 1.0,
+        rotation: 0.0, 
+        color: WHITE, 
+    };
+    let texts: &[&str] = match app_state {
+        AppState::Start => &["Press space to start"],
+        AppState::GameOver => &["You died!", "Press space to respawn"],
+        AppState::GameDone => &["Congratulations! You have completed the game"],
+        AppState::Active { paused: true } => &["Paused"],
+        _ => return,
+    };
+    for (id, text) in texts.iter().enumerate() { 
+        let mut x = TILE_SIDE_F32 * 8.0;
+        let y = TILE_SIDE_F32 * 8.0 + id as f32 * TILE_SIDE_F32 * 1.4;
+        let measure = measure_text(
+            text,
+            params.font, 
+            params.font_size,
+            params.font_scale,
+        );
+        x -= (measure.width / 2.0);
+        draw_text_ex(text, x, y, params.clone());
     }
 }
 
