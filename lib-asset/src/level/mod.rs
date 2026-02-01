@@ -26,6 +26,7 @@ pub struct LevelDef {
 /// Entity data. Currently, all entities are represented as squares.
 #[derive(Default, Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
 pub struct CharacterDef {
+    pub local_id: u32,
     /// Rotation angle in degrees
     pub look_angle: f32,
     /// Position in level units

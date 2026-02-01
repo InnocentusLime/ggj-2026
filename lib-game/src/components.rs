@@ -76,3 +76,6 @@ pub enum Team {
     Player,
     Enemy,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct ObjId(pub u32);

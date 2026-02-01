@@ -1,4 +1,4 @@
-use crate::{CollisionSolver, DamageCooldown, Health, Team, col_query};
+use crate::{col_query, CollisionSolver, DamageCooldown, Health, ObjId, Resources, Team};
 
 use hecs::{CommandBuffer, World};
 
@@ -49,10 +49,11 @@ pub fn collect_damage(world: &mut World, col_solver: &CollisionSolver) {
     }
 }
 
-pub fn despawn_on_zero_health(world: &mut World, cmds: &mut CommandBuffer) {
-    for (entity, health) in world.query_mut::<&Health>() {
+pub fn despawn_on_zero_health(world: &mut World, cmds: &mut CommandBuffer, resources: &mut Resources) {
+    for (entity, (health, obj_id)) in world.query_mut::<(&Health, &ObjId)>() {
         if health.value <= 0 {
             cmds.despawn(entity);
+            resources.kill_memory.insert((resources.level_id, obj_id.0));
         }
     }
 }

@@ -3,14 +3,14 @@ use super::prelude::*;
 
 use crate::game::prelude::PlayerState;
 
-const FRACTION_COLOR: &[Color] = &[
+pub const FRACTION_COLOR: &[Color] = &[
     WHITE,
     RED,
     BLUE,
     GREEN,
 ];
 
-const KEY_COLOR: &[Color] = &[
+pub const KEY_COLOR: &[Color] = &[
     YELLOW,
     PURPLE,
 ];

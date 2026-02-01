@@ -12,6 +12,8 @@ use lib_asset::level::*;
 use lib_asset::FontId;
 use prelude::*;
 
+use crate::game::render::KEY_COLOR;
+
 fn decide_next_state(world: &mut World) -> Option<AppState> {
     let player_dead = world
         .query_mut::<&Health>()
@@ -246,6 +248,33 @@ impl Game for Project {
                     font_scale_aspect: 1.0,
                     rotation: 0.0, 
                     color, 
+                },
+            );
+        }
+
+        for idx in 0..2 {
+            if !resources.key_unlock[idx] {
+                continue;
+            }
+            
+            let rect = if idx == 0 {
+                atlas_tile(10, 4)
+            } else {
+                atlas_tile(11, 4)
+            };
+
+            draw_texture_ex(
+                &resources.textures[&TextureId::Items], 
+                16.0 * TILE_SIDE_F32 + 1.0 * TILE_SIDE_F32 + idx as f32 * TILE_SIDE_F32, 
+                8.0 * TILE_SIDE_F32, 
+                KEY_COLOR[idx],
+                DrawTextureParams { 
+                    dest_size: None,
+                    source: Some(rect),
+                    rotation: 0.0,
+                    flip_x: false,
+                    flip_y: false,
+                    pivot: None,
                 },
             );
         }

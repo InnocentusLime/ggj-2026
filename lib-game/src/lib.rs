@@ -10,7 +10,7 @@ pub mod dbg;
 
 pub mod sys;
 
-use hashbrown::HashMap;
+use hashbrown::{HashMap, HashSet};
 use hecs::{Entity, EntityBuilder};
 
 pub use collisions::*;
@@ -368,7 +368,11 @@ impl App {
 
     fn spawn_characters<G: Game>(&mut self, game: &G) {
         for def in self.resources.level.characters.iter() {
+            if self.resources.kill_memory.contains(&(self.resources.level_id, def.local_id)) {
+                continue;
+            }
             let mut builder = EntityBuilder::new();
+            builder.add(ObjId(def.local_id));
             game.init_character(&self.resources, &mut builder, *def);
             self.world.spawn(builder.build());
         }
@@ -396,7 +400,7 @@ impl App {
         health::collect_damage(&mut self.world, &self.col_solver);
         health::apply_damage(&mut self.world);
         health::apply_cooldown(&mut self.world);
-        health::despawn_on_zero_health(&mut self.world, &mut self.cmds);
+        health::despawn_on_zero_health(&mut self.world, &mut self.cmds, &mut self.resources);
         self.do_room_switch();
 
         let new_state = game.update(
@@ -563,6 +567,7 @@ pub struct Resources {
     pub key_unlock: [bool; 2],
     pub door_open: [bool; 2],
     pub current_mask: u32,
+    pub kill_memory: HashSet<(LevelId, u32)>,
 }
 
 impl Resources {
@@ -581,6 +586,7 @@ impl Resources {
             key_unlock: [false; 2],
             door_open: [false; 2],
             current_mask: 0,
+            kill_memory: HashSet::new(),
         }
     }
 
