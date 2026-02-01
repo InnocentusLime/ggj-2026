@@ -114,7 +114,7 @@ impl Game for Project {
                 anim_sync(world, resources);
             }
         }
-        player::spawn_attack(world, cmds);
+        player::spawn_attack(world, cmds, resources);
     }
 
     fn update(

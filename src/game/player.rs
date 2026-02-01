@@ -1,5 +1,7 @@
 use core::f32;
 
+use macroquad::audio::{play_sound, PlaySoundParams};
+
 use super::prelude::*;
 
 pub const PLAYER_ATTACK_DELAY: f32 = 1.0;
@@ -94,7 +96,7 @@ pub fn controls(dt: f32, input: &InputModel, world: &mut World, resources: &Reso
     }
 }
 
-pub fn spawn_attack(world: &mut World, cmds: &mut CommandBuffer) {
+pub fn spawn_attack(world: &mut World, cmds: &mut CommandBuffer, resources: &Resources) {
     for (_, (tf, angle, cooldown)) in world.query_mut::<(&Transform, &LookAngle, &mut AttackCooldown)>().with::<&PlayerState>() {
         if cooldown.0 != PLAYER_ATTACK_DELAY {
             continue;
@@ -115,6 +117,10 @@ pub fn spawn_attack(world: &mut World, cmds: &mut CommandBuffer) {
             ),
             Lifetime(0.3),
         ));
+        play_sound(&resources.sounds[&SoundId::Swoosh], PlaySoundParams{
+            looped: false,
+            volume: 0.6,
+        });
     }
 }
 

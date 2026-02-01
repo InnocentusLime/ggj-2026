@@ -126,8 +126,9 @@ pub fn render_hunter(world: &World, render: &mut Render) {
 }
 
 pub fn render_attack(world: &World, render: &mut Render) {
-    for (_, (tf)) in &mut world.query::<(&Transform)>().with::<&Attack>().iter() {
+    for (_, (tf, life)) in &mut world.query::<(&Transform, &Lifetime)>().with::<&Attack>().iter() {
         let mut tf = *tf;
+        let a = ((life.0 / 0.3) - 0.7).exp();
 
         tf.pos -= (Vec2::splat(TILE_SIDE_F32) / 2.0).rotate(Vec2::from_angle(tf.angle));
         render.sprite_buffer.push(SpriteData { 
@@ -135,7 +136,7 @@ pub fn render_attack(world: &World, render: &mut Render) {
             tf, 
             texture: TextureId::Mobs, 
             rect: atlas_tile(12, 1), 
-            color: WHITE, 
+            color: WHITE.with_alpha(a), 
             sort_offset: 0.0, 
         });
     }
