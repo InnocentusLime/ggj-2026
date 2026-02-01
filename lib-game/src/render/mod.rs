@@ -246,7 +246,7 @@ impl Render {
                 },
                 texture: self.tilemap_atlas,
                 rect: tile_rect,
-                color: WHITE,
+                color: Color::from_rgba(20, 20, 80, 255),
                 sort_offset: 0.0,
             });
         }

@@ -3,10 +3,17 @@ use super::prelude::*;
 
 use crate::game::prelude::PlayerState;
 
+const FRACTION_COLOR: &[Color] = &[
+    WHITE,
+    RED,
+    BLUE,
+    GREEN,
+];
+
 pub fn render_player(world: &World, render: &mut Render) {
-    for (_, (tf, health)) in &mut world.query::<(&Transform, &Health)>().with::<&PlayerState>().iter() {
+    for (_, (tf, health, mask)) in &mut world.query::<(&Transform, &Health, &CurrentMask)>().with::<&PlayerState>().iter() {
         let mut tf = *tf;
-        let mut player_color = WHITE;
+        let mut player_color = FRACTION_COLOR[mask.0 as usize];
         if should_flicker() && health.is_invulnerable {
             player_color.a = 0.5;
         }
@@ -26,7 +33,7 @@ pub fn render_player(world: &World, render: &mut Render) {
 pub fn render_stabber(world: &World, render: &mut Render) {
     for (_, (tf, health)) in &mut world.query::<(&Transform, &Health)>().with::<&StabberState>().iter() {
         let mut tf = *tf;
-        let mut grunt_color = WHITE;
+        let mut grunt_color = FRACTION_COLOR[1];
         if should_flicker() && health.is_invulnerable {
             grunt_color.a = 0.5;
         }
@@ -44,7 +51,7 @@ pub fn render_stabber(world: &World, render: &mut Render) {
 }
 
 pub fn render_mask(world: &World, render: &mut Render) {
-    for (_, (tf)) in &mut world.query::<(&Transform)>().with::<&Mask>().iter() {
+    for (_, (tf, mask)) in &mut world.query::<(&Transform, &Mask)>().iter() {
         let mut tf = *tf;
 
         tf.pos -= Vec2::splat(TILE_SIDE_F32) / 2.0;
@@ -53,7 +60,7 @@ pub fn render_mask(world: &World, render: &mut Render) {
             tf, 
             texture: TextureId::Items, 
             rect: atlas_tile(14, 1), 
-            color: WHITE, 
+            color: FRACTION_COLOR[mask.0 as usize], 
             sort_offset: 0.0, 
         });
     }
@@ -69,7 +76,7 @@ pub fn render_hunter(world: &World, render: &mut Render) {
             tf, 
             texture: TextureId::Mobs, 
             rect: atlas_tile(2, 7), 
-            color: WHITE, 
+            color: FRACTION_COLOR[2], 
             sort_offset: 0.0, 
         });
     }
