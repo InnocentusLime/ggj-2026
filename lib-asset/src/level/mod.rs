@@ -44,11 +44,18 @@ pub struct CharacterDef {
 #[serde(rename_all = "snake_case")]
 pub enum CharacterInfo {
     Player {},
-    Stabber {},
+    Stabber {
+        #[serde(default)]
+        drop_key: u32,
+    },
     Mask {
         id: u32,
     },
     Hunter {},
+    Door {
+        #[serde(default)]
+        key: u32,
+    }
 }
 
 impl Default for CharacterInfo {

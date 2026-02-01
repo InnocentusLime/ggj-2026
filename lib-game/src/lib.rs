@@ -424,7 +424,12 @@ impl App {
         // left
         if check_level_switch(self.room_switches[0]) {
             let mut level_id = self.resources.level_id;
-            level_id.0.x -= 1;
+            if level_id.0.x == 0 {
+                self.state = AppState::GameDone;
+                return;
+            } else {
+                level_id.0.x -= 1;
+            }
             self.queued_level = Some(level_id);
         }
 
@@ -555,6 +560,8 @@ pub struct Resources {
     pub fonts: HashMap<FontId, Font>,
     pub masks: Vec<PlayerAttributes>,
     pub mask_unlock: Vec<bool>,
+    pub key_unlock: [bool; 2],
+    pub door_open: [bool; 2],
     pub current_mask: u32,
 }
 
@@ -571,6 +578,8 @@ impl Resources {
             fonts: HashMap::new(),
             masks: Vec::new(),
             mask_unlock: Vec::new(),
+            key_unlock: [false; 2],
+            door_open: [false; 2],
             current_mask: 0,
         }
     }

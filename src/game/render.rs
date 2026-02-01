@@ -10,6 +10,11 @@ const FRACTION_COLOR: &[Color] = &[
     GREEN,
 ];
 
+const KEY_COLOR: &[Color] = &[
+    YELLOW,
+    PURPLE,
+];
+
 pub fn render_player(world: &World, render: &mut Render) {
     for (_, (tf, health, mask)) in &mut world.query::<(&Transform, &Health, &CurrentMask)>().with::<&PlayerState>().iter() {
         let mut tf = *tf;
@@ -61,6 +66,44 @@ pub fn render_mask(world: &World, render: &mut Render) {
             texture: TextureId::Items, 
             rect: atlas_tile(14, 1), 
             color: FRACTION_COLOR[mask.0 as usize], 
+            sort_offset: 0.0, 
+        });
+    }
+}
+
+pub fn render_key(world: &World, render: &mut Render) {
+    for (_, (tf, key)) in &mut world.query::<(&Transform, &Key)>().iter() {
+        let mut tf = *tf;
+
+        let rect = if key.0 == 0 {
+            atlas_tile(10, 4)
+        } else {
+            atlas_tile(11, 4)
+        };
+
+        tf.pos -= Vec2::splat(TILE_SIDE_F32) / 2.0;
+        render.sprite_buffer.push(SpriteData { 
+            layer: 1, 
+            tf, 
+            texture: TextureId::Items, 
+            rect, 
+            color: KEY_COLOR[key.0 as usize], 
+            sort_offset: 0.0, 
+        });
+    }
+}
+
+pub fn render_door(world: &World, render: &mut Render) {
+    for (_, (tf, door)) in &mut world.query::<(&Transform, &Door)>().iter() {
+        let mut tf = *tf;
+
+        tf.pos -= Vec2::splat(TILE_SIDE_F32) / 2.0;
+        render.sprite_buffer.push(SpriteData { 
+            layer: 1, 
+            tf, 
+            texture: TextureId::Objs, 
+            rect: atlas_tile(7, 0),
+            color: KEY_COLOR[door.0 as usize], 
             sort_offset: 0.0, 
         });
     }

@@ -24,6 +24,10 @@
  </layer>
  <objectgroup id="3" name="Characters">
   <object id="11" template="character.tx" name="Player" type="player" x="103.293" y="216.937" rotation="180"/>
-  <object id="13" template="character.tx" name="Welcome grunt" type="stabber" x="144.746" y="254.998"/>
+  <object id="13" template="character.tx" name="Welcome grunt" type="stabber" x="144.746" y="254.998">
+   <properties>
+    <property name="drop_key" type="int" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

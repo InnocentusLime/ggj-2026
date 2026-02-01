@@ -1,6 +1,6 @@
 use super::prelude::*;
 
-pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
+pub fn init(builder: &mut EntityBuilder, drop_key: u32, pos: Vec2, resources: &Resources) {
     let cfg = &resources.cfg;
     builder.add_bundle((
         StabberState::Active,
@@ -18,7 +18,22 @@ pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
             col_group::NONE,
         ),
         new_vision_cast(),
+        Dropkey(drop_key),
     ));
+}
+
+pub fn do_drops(world: &World, resources: &Resources, cmds: &mut CommandBuffer) {
+    for (_, (hp, tf, drop)) in &mut world.query::<(&Health, &Transform, &Dropkey)>().with::<&StabberState>() {
+        if hp.value > 0 {
+            continue;
+        }
+        if drop.0 == 0 {
+            continue;
+        }
+        let mut builder = EntityBuilder::new();
+        super::key::init(&mut builder, drop.0 - 1, tf.pos, resources);
+        cmds.spawn(builder.build());
+    }
 }
 
 pub fn think(dt: f32, world: &World, resources: &Resources) {

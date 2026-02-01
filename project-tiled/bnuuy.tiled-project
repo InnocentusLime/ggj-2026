@@ -44,6 +44,31 @@
             ]
         },
         {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 11,
+            "members": [
+                {
+                    "name": "key",
+                    "type": "int",
+                    "value": 0
+                }
+            ],
+            "name": "door",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
             "color": "#ff00ff00",
             "drawFill": true,
             "id": 5,
@@ -139,6 +164,11 @@
             "drawFill": true,
             "id": 6,
             "members": [
+                {
+                    "name": "drop_key",
+                    "type": "int",
+                    "value": 0
+                }
             ],
             "name": "stabber",
             "type": "class",

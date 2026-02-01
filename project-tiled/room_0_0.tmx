@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="17" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#030307" nextlayerid="4" nextobjectid="15">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="17" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#030307" nextlayerid="4" nextobjectid="16">
  <tileset firstgid="1" source="world.tsx"/>
  <layer id="1" name="World" width="16" height="17">
   <data encoding="csv">
@@ -12,9 +12,9 @@
 169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,
 169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,
 169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,61,
-169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
-169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
-169,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+75,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
+75,0,0,0,0,0,0,0,0,0,0,0,0,0,0,171,
 169,0,0,0,4,0,0,0,4,0,0,0,0,0,0,171,
 169,0,0,0,28,0,0,0,28,0,0,0,0,0,0,0,
 169,0,0,0,28,0,0,0,28,0,0,0,0,0,0,0,
@@ -22,11 +22,19 @@
 193,194,194,194,194,194,194,194,194,194,194,194,194,194,194,194
 </data>
  </layer>
- <objectgroup id="3" name="Characters">
+ <objectgroup id="3" name="Characters" class="door">
+  <properties>
+   <property name="key" type="int" value="1"/>
+  </properties>
   <object id="11" template="character.tx" name="Player" type="player" x="103.293" y="216.937" rotation="180"/>
   <object id="13" template="character.tx" type="mask" x="107" y="91.5">
    <properties>
     <property name="id" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="15" template="character.tx" name="door" type="door" x="7.79167" y="168.229" rotation="180">
+   <properties>
+    <property name="key" type="int" value="1"/>
    </properties>
   </object>
  </objectgroup>

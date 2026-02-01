@@ -28,3 +28,12 @@ pub struct LookAngle(pub f32);
 
 #[derive(Debug, Clone, Copy)]
 pub struct Lifetime(pub f32);
+
+#[derive(Debug, Clone, Copy)]
+pub struct Dropkey(pub u32);
+
+#[derive(Debug, Clone, Copy)]
+pub struct Key(pub u32);
+
+#[derive(Debug, Clone, Copy)]
+pub struct Door(pub u32);

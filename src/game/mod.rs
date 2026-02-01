@@ -5,6 +5,8 @@ mod render;
 mod stabber;
 mod mask;
 mod hunter;
+mod key;
+mod door;
 
 use lib_asset::level::*;
 use lib_asset::FontId;
@@ -120,6 +122,9 @@ impl Game for Project {
         player::publish_pos(world, resources);
         player::tick_attack(dt, world, cmds);
         mask::pickup(world, resources, collisions, cmds);
+        key::pickup(world, resources, collisions, cmds);
+        door::open(world, resources, collisions, cmds);
+        stabber::do_drops(world, resources, cmds);
         decide_next_state(world)
     }
 
@@ -136,6 +141,8 @@ impl Game for Project {
             render::render_mask(world, render);
             render::render_hunter(world, render);
             render::render_attack(world, render);
+            render::render_key(world, render);
+            render::render_door(world, render);
         }
     }
 
@@ -178,9 +185,10 @@ impl Game for Project {
     ) {
         match def.info {
             CharacterInfo::Player {} => player::init(builder, def.pos, resources),
-            CharacterInfo::Stabber {} => stabber::init(builder, def.pos, resources),
+            CharacterInfo::Stabber { drop_key } => stabber::init(builder, drop_key, def.pos, resources),
             CharacterInfo::Mask { id } => mask::init(builder, def.pos, resources, id),
             CharacterInfo::Hunter {} => hunter::init(builder, def.pos, resources),
+            CharacterInfo::Door { key } => door::init(builder, key, def.pos, resources),
         }
     }
 
