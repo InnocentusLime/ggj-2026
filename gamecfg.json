@@ -1,7 +1,7 @@
 {
     "player": {
         "speed": 48.0,
-        "max_hp": 3,
+        "max_hp": 2,
         "hit_cooldown": 1.0,
         "shape": {
             "type": "Rect",

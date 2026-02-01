@@ -5,10 +5,10 @@ use super::prelude::*;
 pub const PLAYER_ATTACK_DELAY: f32 = 1.0;
 
 pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
-    let pos = if resources.is_start {
-        pos
+    let (pos, health, current_mask) = if resources.is_start {
+        (pos, resources.cfg.player.max_hp, 0)
     } else {
-        resources.player_pos
+        (resources.player_pos, resources.current_health as i32, resources.current_mask)
     };
     let cfg = &resources.cfg;
     builder.add_bundle((
@@ -16,13 +16,13 @@ pub fn init(builder: &mut EntityBuilder, pos: Vec2, resources: &Resources) {
         DamageCooldown::new(resources.cfg.player.hit_cooldown),
         KinematicControl::new_slide(col_group::LEVEL),
         Transform::from_pos(pos),
-        Health::new(cfg.player.max_hp),
+        Health::new(health),
         BodyTag {
             groups: col_group::CHARACTERS.union(col_group::PLAYER),
             shape: cfg.player.shape,
         },
         PlayerAttributes::default(),
-        CurrentMask(resources.current_mask),
+        CurrentMask(current_mask),
         AttackCooldown(0.0),
         LookAngle(0.0),
     ));
@@ -137,8 +137,9 @@ pub fn propagate_attriutes(world: &mut World, resources: &mut Resources) {
     }
 }
 
-pub fn publish_pos(world: &mut World, resources: &mut Resources) {
-    for (_, tf) in world.query_mut::<&Transform>().with::<&PlayerState>() {
+pub fn publish_data(world: &mut World, resources: &mut Resources) {
+    for (_, (tf, health)) in world.query_mut::<(&Transform, &Health)>().with::<&PlayerState>() {
         resources.player_pos = tf.pos;
+        resources.current_health = health.value.max(0) as u32;
     }
 }

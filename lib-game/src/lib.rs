@@ -498,6 +498,7 @@ impl App {
         match self.state {
             AppState::GameOver if input.confirmation_detected => {
                 self.state = AppState::Active { paused: false };
+                self.resources.reset_state();
                 self.queued_level = Some(LevelId(uvec2(0, 0)));
             }
             AppState::Win if input.confirmation_detected => {
@@ -505,6 +506,7 @@ impl App {
             }
             AppState::Start if input.confirmation_detected => {
                 self.state = AppState::Active { paused: false };
+                self.resources.reset_state();
                 self.queued_level = Some(LevelId(uvec2(0, 0)));
             }
             AppState::Active { paused } if input.pause_requested => {
@@ -569,6 +571,7 @@ pub struct Resources {
     pub key_unlock: [bool; 2],
     pub door_open: [bool; 2],
     pub current_mask: u32,
+    pub current_health: u32,
     pub kill_memory: HashSet<(LevelId, u32)>,
 }
 
@@ -589,8 +592,18 @@ impl Resources {
             key_unlock: [false; 2],
             door_open: [false; 2],
             current_mask: 0,
+            current_health: 3,
             kill_memory: HashSet::new(),
         }
+    }
+
+    pub fn reset_state(&mut self) {
+        self.kill_memory.clear();
+        self.is_start = true;
+        self.mask_unlock.fill(false);
+        self.mask_unlock[0] = true;
+        self.door_open.fill(false);
+        self.key_unlock.fill(false);
     }
 
     pub async fn load_sound(&mut self, sound_id: SoundId) {

@@ -125,7 +125,7 @@ impl Game for Project {
         collisions: &CollisionSolver,
         cmds: &mut CommandBuffer,
     ) -> Option<lib_game::AppState> {
-        player::publish_pos(world, resources);
+        player::publish_data(world, resources);
         player::tick_attack(dt, world, cmds);
         mask::pickup(world, resources, collisions, cmds);
         key::pickup(world, resources, collisions, cmds);
@@ -244,15 +244,18 @@ impl Game for Project {
             },
         );
         for mask_id in 0..resources.masks.len() {
-            let color = if player_mask == mask_id as u32 {
-                YELLOW
-            } else if resources.mask_unlock[mask_id] {
+            let color = if resources.mask_unlock[mask_id] {
                 WHITE
             } else {
                 DARKGRAY
             };
+            let text = if player_mask == mask_id as u32 {
+                format!("{}<", mask_id + 1)
+            } else {
+                format!("{}", mask_id + 1)
+            };
             draw_text_ex(
-                format!("{}", mask_id + 1), 
+                text,
                 16.0 * TILE_SIDE_F32 + 1.0 * TILE_SIDE_F32, 
                 4.0 * TILE_SIDE_F32 + TILE_SIDE_F32 * mask_id as f32, 
                 TextParams { 
@@ -310,9 +313,9 @@ fn draw_unpresentable_ui(hide: bool, app_state: AppState, resources: &Resources)
         color: WHITE, 
     };
     let texts: &[&str] = match app_state {
-        AppState::Start => &["Press space to start"],
-        AppState::GameOver => &["You died!", "Press space to respawn"],
-        AppState::GameDone => &["Congratulations! You have completed the game"],
+        AppState::Start => &["Switch masks with number keys", "Escape through the purple door", "", "Press space to start"],
+        AppState::GameOver => &["You died", "Press space to restart"],
+        AppState::GameDone => &["You escaped"],
         AppState::Active { paused: true } => &["Paused"],
         _ => return,
     };
